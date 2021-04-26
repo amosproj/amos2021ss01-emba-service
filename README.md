@@ -4,12 +4,12 @@
 
 
 <p align="center">
-  <img src="./helpers/embark.svg" alt="" width="200"/>
+  <img src="./helpers/embark.svg" alt="" width="250"/>
 </p>
 
 - [About](#About)
-- [Installation](#Installation)
 - [Setup](#Setup)
+- [Docker](#Docker)
 - [Pipelines](#Pipelines)
 - [Logging](#Logging)
 
