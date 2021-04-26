@@ -9,8 +9,8 @@
 
 - [About](#About)
 - [Installation](#Installation)
-- [Docker Setup](#Docker Setup)
-- [CI Pipelines](#CI Pipelines)
+- [Setup](#Setup)
+- [Pipelines](#Pipelines)
 - [Logging](#Logging)
 
 ## About
@@ -24,7 +24,7 @@ Furthermore *Embark* is improves the data provision by aggregating the various *
 
 TODO
 
-## Docker Setup
+## Docker
 
 The docker image is build using docker compose.  
 See docker-compose.yml for further information.
@@ -57,7 +57,7 @@ If you want to run something from inside the container like a shell script to an
 3. Run your script.
 
 ---
-## CI Pipelines
+## Pipelines
 
 Currently there are two Pipelines running:
 * Linter (pycodestyle / pep8)  
