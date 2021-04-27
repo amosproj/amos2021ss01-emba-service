@@ -1,0 +1,6 @@
+Installation:
+Please paste the pyToBash file in the folder emba where ./emba.sh contains.
+
+To test the python file we have two scenarios can be checked.
+1. Run by the command python ./pyToBash.py [firmwareFile] and observe the analysis in the command line.
+2. Run without the firmware file and observe the print message in the command line.
