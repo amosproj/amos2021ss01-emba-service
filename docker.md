@@ -5,6 +5,21 @@
 
 **NOTE: For now our compose file is compatible with docker-compose version `1.27.x`. `1.28.x` and `1.29.x` are already available and by default you will end up with latest version unless you specify explicitly while installing. Please install version`1.27.x` untill we fix this**
 
+### Managing environment valriables
+1. There is a temp .env file in the root folder of the repo
+2. It has following fields for now
+```
+DATABASE_NAME=
+DATABASE_USER=
+DATABASE_PASSWORD=
+DATABASE_HOST=
+DATABASE_PORT=
+MYSQL_ROOT_PASSWORD=
+```
+3. First five depend on your preference when you are working on your dev machines
+4. `MYSQL_ROOT_PASSWORD` should always be equal to `DATABASE_PASSWORD`
+5. We will soon start maintaining central env file
+6. Till then you will have to edit it to bring the containers up.
 
 ### Building and running containers
 
@@ -34,9 +49,6 @@ You should get a response like this:
 Whenever you change any code in `embark`(django project). You will have to make it live. Since all our code is mounted through compose.
 Developers just need to run the following command -  
 `docker-compose restart`
-
-### Updating environment variables
-Todo
 
 
 ### Exec inside the containers
