@@ -1,4 +1,4 @@
-function saveFiles() {
+function embaProgress() {
 
 // example for websocket setup in frontent TODO: remove the whole file later
     const socket = new WebSocket(
@@ -8,26 +8,26 @@ function saveFiles() {
     );
 
     socket.onopen = function (e) {
-        alert("[open] Connection established");
+        console.log("[open] Connection established");
     };
 
     socket.onmessage = function (event) {
         var data = JSON.parse(event.data);
-        console.log(data);
-        makeProgress()
         //document.querySelector('#app').innerText = data.message;
+        //console.log(data.percentage)
+        makeProgress(data.percentage)
     }
     socket.onclose = function (event) {
+        console.log(event.code)
         console.error('Chat socket closed unexpectedly');
     };
-    // count lines of emba log
-    var i = 0;
 
-    function makeProgress() {
-        $(".progress-bar").css("width", i + "%").text(i + " %");
-        $('#progressBar').attr('aria-valuenow', percent).css('width', percent + '%').text(percent + '%')
+    function makeProgress(percent) {
+        //$(".progressBar").css("width",  percent + "%").text(percent + " %");
+        var p = percent * 100;
+        $('#pBar').attr('aria-valuenow', p).css('width', p + '%').text(p + '%')
         // Wait for sometime before running this script again
-        setTimeout("makeProgress()", 100);
+        //setTimeout("makeProgress()", 100);
     }
 
 }

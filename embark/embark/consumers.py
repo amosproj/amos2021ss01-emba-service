@@ -58,7 +58,7 @@ class WSConsumer(WebsocketConsumer):
     def update_status(self, stream_item_list):
         # progress percentage TODO: improve percentage calculation
         self.module_count += 1
-        percentage = self.module_count / 33
+        percentage = self.module_count / 34
         self.status_msg["module"] = stream_item_list[0]
         self.status_msg["percentage"] = percentage
 
