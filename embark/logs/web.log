@@ -1,0 +1,7 @@
+2021-05-19 12:16:10 web          DEBUG    Passwords match. Creating user
+2021-05-19 12:16:10 web          DEBUG    User created
+2021-05-19 12:16:10 web          DEBUG    User authenticated
+2021-05-19 12:16:10 web          DEBUG    User logged in
+2021-05-19 12:16:40 web          DEBUG    Found user name and password
+2021-05-19 12:16:40 web          DEBUG    User authenticated
+2021-05-19 12:16:40 web          DEBUG    User logged in

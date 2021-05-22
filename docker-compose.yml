@@ -6,7 +6,6 @@ services:
     restart: always
     env_file:
       - .env
-    network_mode: "host"
     ports:
       - '3306:3306'
   emba:
@@ -22,7 +21,6 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock
         - /tmp/:/tmp/
         - ./embark/:/app/embark/
-    network_mode: "host"
     ports:
       - '8000:8000'
       - '8001:8001'
