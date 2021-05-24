@@ -88,8 +88,7 @@ input:checked+.slider:before {
     height: 90vh;
     overflow: scroll;
     overflow-x: hidden;
-    padding: 20px;
-    padding-right: 5px;
+    padding: 20px 5px 20px 20px;
     font-size: small;
 }
 
