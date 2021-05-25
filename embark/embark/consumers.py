@@ -9,12 +9,16 @@ import rx
 import rx.operators as ops
 from channels.generic.websocket import WebsocketConsumer
 from inotify_simple import flags
+from django.conf import settings
+from uploader import models
+
 
 from . import inotify_wrap
 
 
 # consumer class for synchronous/asynchronous websocket communication
 # TODO: Implement frontend Websocket handling and data extraction (Example in progress.html -> remove later)
+
 
 class WSConsumer(WebsocketConsumer):
 
@@ -23,6 +27,9 @@ class WSConsumer(WebsocketConsumer):
         super().__init__()
         # self.room_group_name = 'status_updates_group'
         # global module count and status_msg directory
+        firmware_flags = models.Firmware.objects.latest('id')
+        self.path = f"/app/embark/{settings.LOG_ROOT}/active_{firmware_flags.id}/emba.log"
+        self.path_new = f"/app/embark/{settings.LOG_ROOT}/active_{firmware_flags.id}/emba_new.log"
         self.module_count = 0
         # TODO: extend dictionary for more information
         self.status_msg = {
@@ -37,7 +44,8 @@ class WSConsumer(WebsocketConsumer):
         self.accept()
 
         # if file does not exist create it otherwise delete its content
-        open('/app/emba/log_1/emba_new.log', 'w+')
+
+        open(self.path, 'w+')
 
         # start waiting for events
         self.read_loop()
@@ -78,7 +86,7 @@ class WSConsumer(WebsocketConsumer):
         while True:
 
             # look for new events
-            got_event = inotify_wrap.inotify_events()
+            got_event = inotify_wrap.inotify_events(self.path)
             for eve in got_event:
                 for flag in flags.from_mask(eve.mask):
                     # Ignore irrelevant flags TODO: add other possible flags
@@ -115,7 +123,7 @@ class WSConsumer(WebsocketConsumer):
                   :return: None
         """
 
-        with open('/app/emba/log_1/emba_new.log', 'a') as diff_file:
+        with open(self.path_new, 'a') as diff_file:
             diff_file.write(diff)
 
     def get_diff(self):
@@ -128,8 +136,8 @@ class WSConsumer(WebsocketConsumer):
         """
 
         # open the two files to get diff from TODO: remove hard coding
-        old_file = open('/app/emba/log_1/emba.log')
-        new_file = open('/app/emba/log_1/emba_new.log')
+        old_file = open(self.path)
+        new_file = open(self.path_new)
 
         diff = difflib.ndiff(old_file.readlines(), new_file.readlines())
         return ''.join(x[2:] for x in diff if x.startswith('- '))
