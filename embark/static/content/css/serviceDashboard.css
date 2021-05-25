@@ -47,6 +47,20 @@ body {
     	
 }
 .statusTile:hover {
-    background: blueviolet;
+    background : blue;
 }
-  
+.statusEMba{
+    display: flex;
+}
+.headerText{
+    margin: 5px;
+}
+.log {
+    width: 50%;
+    margin: 4px;
+}
+
+.main{
+    width: 100%;
+    height: 100%;
+}
