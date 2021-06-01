@@ -40,6 +40,7 @@ class WSConsumer(WebsocketConsumer):
             "percentage": 0.0,
             "module": "",
             "phase": "",
+            "firmware_id": ""
         }
 
     # this method is executed when the connection to the frontend is established
