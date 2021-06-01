@@ -8,10 +8,14 @@ import time
 
 import rx
 import rx.operators as ops
+
 from channels.generic.websocket import WebsocketConsumer
+
+
 from inotify_simple import flags
 from django.conf import settings
 from uploader import models
+
 
 
 from . import inotify_wrap
@@ -28,8 +32,8 @@ class WSConsumer(WebsocketConsumer):
         super().__init__()
         # self.room_group_name = 'status_updates_group'
         # global module count and status_msg directory
-        self.path = f"/app/emba/{settings.LOG_ROOT}/emba.log"
-        self.path_new = f"/app/emba/{settings.LOG_ROOT}/emba_new.log"
+        self.path = None
+        self.path_new = None
         self.module_count = 0
         # TODO: extend dictionary for more information
         self.status_msg = {
@@ -41,6 +45,12 @@ class WSConsumer(WebsocketConsumer):
     # this method is executed when the connection to the frontend is established
     def connect(self):
         # accept socket connection
+        firmware_id = self.scope["url_route"]["kwargs"]["firmware_id"]
+        self.path = f"/app/emba/{settings.LOG_ROOT}/active_{firmware_id}/emba.log"
+        self.path_new = f"/app/emba/{settings.LOG_ROOT}/active_{firmware_id}/emba_new.log"
+
+        self.status_msg['firmware_id'] = firmware_id
+
         self.accept()
         # if file does not exist create it otherwise delete its content
 
@@ -68,6 +78,7 @@ class WSConsumer(WebsocketConsumer):
         percentage = self.module_count / 35
         self.status_msg["module"] = stream_item_list[0]
         self.status_msg["percentage"] = percentage
+
 
     # update dictionary with phase changes
     def update_phase(self, stream_item_list):

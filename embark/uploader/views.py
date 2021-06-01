@@ -1,8 +1,5 @@
-from django.conf import settings
-
 from django import forms
 import logging
-from pathlib import Path
 
 from django.shortcuts import render
 from django.template.loader import get_template
@@ -97,7 +94,6 @@ def start_analysis(request):
 
     """
     # Safely create emba_logs directory
-    Path(f'/app/emba/{settings.LOG_ROOT}').mkdir(parents=True, exist_ok=True)
 
     if request.method == 'POST':
         form = FirmwareForm(request.POST)
