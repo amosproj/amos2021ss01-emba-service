@@ -1,20 +1,14 @@
 import difflib
 import json
-import logging
-import os
 import re
-import sys
-import time
 
 import rx
 import rx.operators as ops
 
 from channels.generic.websocket import WebsocketConsumer
 
-
 from inotify_simple import flags
 from django.conf import settings
-from uploader import models
 
 
 
@@ -79,7 +73,6 @@ class WSConsumer(WebsocketConsumer):
         percentage = self.module_count / 35
         self.status_msg["module"] = stream_item_list[0]
         self.status_msg["percentage"] = percentage
-
 
     # update dictionary with phase changes
     def update_phase(self, stream_item_list):
