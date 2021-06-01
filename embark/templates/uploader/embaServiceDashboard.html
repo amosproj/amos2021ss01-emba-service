@@ -1,25 +1,26 @@
-<div class="container-fluid sub-container">
-    <div class="row">
-            <div class="coldiv">
-                    <a class="tile row statusTile">
-                            <!--<span class="headerText">Firmware Image</span>-->
-                            <div class="progress row" id="progress-wrapper">
-                                    <div id="pBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                                    <br>
-                                    <div class="row uploadBtnRow">
-                                        <button type="submit" class="btn btn-light" onclick="embaProgress()">Progress</button>
-                                    </div>
-                            </div>
+<div class="coldiv" id="container_id">
 
-                            <div class="row statusEMba">
-                                <div class="col-sm log tile moduleLog">
-                                        <ul class="log_phase" id="log_phase"> </ul>
-                                </div>
-                                <div class="col-sm log tile phaseLog">
-                                        <ul class="log_phase" id="log_module"> </ul>
-                                </div>
-                            </div>
-                    </a>
-            </div>
-    </div>
 </div>
+
+<template id="productrow">
+        <div class="tile row statusTile" id="tile_id">
+                <!--<span class="headerText">Firmware Image</span>-->
+                <h1 id="header">Process 1</h1>
+                <div class="progress row" id="progress-wrapper">
+                        <div id="pBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                        <br>
+                        <div class="row uploadBtnRow">
+                            <button type="submit" class="btn btn-light">Progress</button>
+                        </div>
+                </div>
+
+                <div class="row statusEMba">
+                    <div class="col-sm log tile moduleLog">
+                            <ul class="log_phase" id="log_phase"> </ul>
+                    </div>
+                    <div class="col-sm log tile phaseLog">
+                            <ul class="log_phase" id="log_module"> </ul>
+                    </div>
+                </div>
+        </div>
+</template>
