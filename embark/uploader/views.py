@@ -23,8 +23,8 @@ from .archiver import Archiver
 # home page test view TODO: change name accordingly
 from .boundedExecutor import BoundedExecutor
 from .archiver import Archiver
-from .forms import FirmwareForm
-from .models import Firmware, FirmwareFile
+from .forms import FirmwareForm, DeleteFirmwareForm
+from .models import Firmware, FirmwareFile, DeleteFirmware
 
 logger = logging.getLogger('web')
 
@@ -118,12 +118,12 @@ def upload_file(request):
             logger.error(form.errors)
             return HttpResponse("Unvalid Form")
 
-    FirmwareForm.base_fields['firmware'] = forms.ModelChoiceField(queryset=FirmwareFile.objects, empty_label='Select firmware')
-    # FirmwareForm.base_fields['firmware_Architecture'] = forms.TypedChoiceField(choices=[(None, 'Select architecture of the linux firmware'),('MIPS', 'MIPS'), ('ARM', 'ARM'), ('x86', 'x86'), ('x64', 'x64'), ('PPC', 'PPC')],empty_value='Architecture')
-    # .values_list('file_name')
+    FirmwareForm.base_fields['firmware'] = forms.ModelChoiceField(queryset=FirmwareFile.objects)
+    DeleteFirmwareForm.base_fields['firmware'] = forms.ModelChoiceField(queryset=FirmwareFile.objects)
 
-    form = FirmwareForm()
-    return render(request, 'uploader/fileUpload.html', {'form': form})
+    analyze_form = FirmwareForm()
+    delete_form = DeleteFirmwareForm()
+    return render(request, 'uploader/fileUpload.html', {'analyze_form': analyze_form, 'delete_form': delete_form})
 
 
 @csrf_exempt
@@ -163,9 +163,13 @@ def save_file(request):
 
     for file in request.FILES.getlist('file'):
         try:
+
             Archiver.check_extensions(file.name)
 
-            firmware_file = FirmwareFile(file=file)
+            firmware_file = FirmwareFile()
+            firmware_file.save()
+
+            firmware_file.file = file
             firmware_file.save()
 
             return HttpResponse("Firmwares has been successfully saved")
@@ -174,6 +178,7 @@ def save_file(request):
             return HttpResponse("Firmware format not supported")
 
         except Exception as error:
+            logger.error(error)
             return HttpResponse("Firmware could not be uploaded")
 
 
@@ -187,3 +192,25 @@ def main_dashboard(request):
 def reports(request):
     html_body = get_template('uploader/reports.html')
     return HttpResponse(html_body.render())
+
+@require_http_methods(["POST"])
+def delete_file(request):
+
+    if request.method == 'POST':
+        form = DeleteFirmwareForm(request.POST)
+
+        if form.is_valid():
+            logger.info(f"Form {form} is valid")
+
+            # get relevant data
+            firmware_file = form.cleaned_data['firmware']
+            firmware_file.delete()
+
+            return HttpResponseRedirect("../../home/#uploader")
+
+        else:
+            logger.error(f"Form {form} is invalid")
+            logger.error(f"{form.errors}")
+            return HttpResponse("Unvalid Form")
+
+    return HttpResponseRedirect("../../home/#uploader")

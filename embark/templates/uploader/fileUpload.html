@@ -29,12 +29,12 @@
     <div class="col-sm">
         <div class="row dataRow">
             <div class="col col-sm-8">
-                <form action="/home/upload/" method="POST" id="post-form">
+                <form action="/home/upload/" method="POST" id="analyze-form">
 
                     {% csrf_token %}
                     {% load filters %}
                     <!-- Iterate over all fields and set expmode on fields in expert mode -->
-                    {% for field in form %}
+                    {% for field in analyze_form %}
 
                         {% if field.expert_mode %}
                             <div class="form-group expertModeOptions" value="expmode" style="display:none;">
@@ -90,13 +90,33 @@
                         </div>
                         <div class="col-sm-5 togSwitch">
                             <label class="switch">
-                                <input id="helpTextSwitch" type="checkbox" onclick="helpTextOn()">
+                                <input id="helpTextSwitch" type="checkbox" onclick="mytest()">
                                 <span class="slider round"></span>
                             </label>
                         </div>
 
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row dataRow">
+            <div class="col col-sm-8">
+                <form action="/home/delete/" method="POST" id="delete-form" onsubmit="window.mytest()">
+
+                    {% csrf_token %}
+                    {% load filters %}
+                    <!-- Iterate over all fields and set expmode on fields in expert mode -->
+                    {% for field in delete_form %}
+
+                        <div class="form-group" >
+                                {{ field.label_tag }}
+                                {{ field }}
+                        </div>
+
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
             </div>
         </div>
     </div>

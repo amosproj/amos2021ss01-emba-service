@@ -111,3 +111,11 @@ function helpTextOn() {
         alert(error.message);
     }
 }
+
+function mytest() {
+    var isValid = confirm('Are you sure ?');
+    if (!isValid) {
+        event.preventDefault();
+        alert("It wont delete. Yay!");
+    }
+}
