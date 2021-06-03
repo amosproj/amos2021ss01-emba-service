@@ -9,10 +9,8 @@ from channels.generic.websocket import WebsocketConsumer
 
 from inotify_simple import flags
 from django.conf import settings
-
-
-
 from . import inotify_wrap
+from uploader.models import Firmware
 
 
 # consumer class for synchronous/asynchronous websocket communication
@@ -40,7 +38,8 @@ class WSConsumer(WebsocketConsumer):
     # this method is executed when the connection to the frontend is established
     def connect(self):
         # accept socket connection
-        firmware_id = self.scope["url_route"]["kwargs"]["firmware_id"]
+        firmware_id = self.scope["url_route"]["kwargs"].get("firmware_id")
+        firmware_id = Firmware.objects.latest('id')
         self.path = f"/app/emba/{settings.LOG_ROOT}/active_{firmware_id}/emba.log"
         self.path_new = f"/app/emba/{settings.LOG_ROOT}/active_{firmware_id}/emba_new.log"
 
