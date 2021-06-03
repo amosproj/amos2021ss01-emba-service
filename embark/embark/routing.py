@@ -6,5 +6,5 @@ from django.conf.urls import url
 # url patterns for websocket communication -> equivalent to urls.py
 # TODO: adjust url after progress example is removed
 ws_urlpatterns = [
-    re_path('ws/progress/<str:firmware_id>', consumers.WSConsumer.as_asgi()),
+    path('ws/progress/<str:firmware_id>', consumers.WSConsumer.as_asgi()),
 ]
