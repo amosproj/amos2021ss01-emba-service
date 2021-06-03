@@ -4,7 +4,7 @@ function embaProgress() {
     const socket = new WebSocket(
         'ws://'
         + location.hostname + ':8001'
-        + '/ws/progress'
+        + '/ws/progress/strin'
     );
 
     var current_module = "no module"
