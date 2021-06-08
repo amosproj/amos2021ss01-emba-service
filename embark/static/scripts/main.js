@@ -48,6 +48,7 @@ function uploader() {
 
 function loadServiceDasboard() {
     try {
+        embaProgress()
         $.ajax({
             url: "serviceDashboard/",
             datatype: "html",

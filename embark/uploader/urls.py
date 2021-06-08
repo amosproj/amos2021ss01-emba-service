@@ -12,6 +12,7 @@ urlpatterns = [
     path('home/reportDashboard/', views.reportDashboard, name='embark-ReportDashboard'),
     # debug
     path('progress/', views.progress, name='embark-progress'),
+    path('start/', views.start, name='start-test'),
     path('download_zipped/<int:analyze_id>/', views.download_zipped, name='embark-download')
 
 ]

@@ -7,6 +7,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
+import os
+
 
 
 from .archiver import Archiver
@@ -79,7 +81,7 @@ def download_zipped(request, analyze_id):
         return HttpResponse(f"Firmware with ID: {analyze_id} does not exist in DB")
     except Exception as ex:
         logger.error(f"Error occured while querying for Firmware object with ID: {analyze_id}")
-        logger.warning(f"{ex}")
+        logger.error(f"{ex}")
         return HttpResponse(f"Error occured while querying for Firmware object with ID: {analyze_id}")
 
 

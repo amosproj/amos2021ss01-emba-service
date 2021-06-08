@@ -13,16 +13,17 @@ from inotify_simple import INotify, flags
 
 logger = logging.getLogger('web')
 
+process_map = {}
 
-class LogReader:
 
-    def __init__(self):
+class LogReader():
+
+    def __init__(self, firmware_id):
         super().__init__()
         # self.room_group_name = 'status_updates_group'
         # global module count and status_msg directory
         self.module_count = 0
-        logger.debug("Hello")
-        self.process_map = {}
+        self.firmware_id = firmware_id
         self.status_msg = {
             "percentage": 0.0,
             "module": "",
@@ -40,12 +41,15 @@ class LogReader:
         self.status_msg["module"] = stream_item_list[0]
         self.status_msg["percentage"] = percentage
         tmp_mes = self.status_msg
+        process_map[self.firmware_id].append(tmp_mes)
         logger.debug(tmp_mes)
         # self.process_map.append(tmp_mes)
 
     # update dictionary with phase changes
     def update_phase(self, stream_item_list):
         self.status_msg["phase"] = stream_item_list[1]
+        tmp_mes = self.status_msg
+        process_map[self.firmware_id].append(tmp_mes)
 
     def read_loop(self):
 
@@ -57,32 +61,29 @@ class LogReader:
        """
         while True:
 
-            # TODO: get current process_ids
+            firmware = Firmware.objects.get(pk=self.firmware_id)
+            logger.debug(firmware)
+            if firmware.id not in process_map.keys():
+                logger.debug("New firmware_id: " + str(firmware.id))
+                process_map[firmware.id] = []
+                # if file does not exist create it otherwise delete its content
+                open(f"{firmware.path_to_logs}/emba_new.log", 'w+')
 
-            firmwares = Firmware.objects.all()  # .filter(finished=False).filter(failed=False)
-            for firmware in firmwares:
-                logger.debug(firmware)
-                if firmware.id not in self.process_map.keys():
-                    logger.debug("New firmware_id: " + str(firmware.id))
-                    self.process_map[firmware.id] = []
-                    # if file does not exist create it otherwise delete its content
-                    open(f"{firmware.log_path}/emba_new.log", 'w+')
-
-                # look for new events
-                got_event = self.inotify_events(f"{firmware.log_path}/emba.log")
-                for eve in got_event:
-                    for flag in flags.from_mask(eve.mask):
-                        # Ignore irrelevant flags TODO: add other possible flags
-                        if flag is flags.CLOSE_NOWRITE or flag is flags.CLOSE_WRITE:
-                            pass
-                        # Act on file change
-                        elif flag is flags.MODIFY:
-                            # get the actual difference
-                            tmp = self.get_diff(firmware.log_path)
-                            # send changes to frontend
-                            self.input_processing(tmp)
-                            # copy diff to tmp file
-                            self.copy_file_content(tmp, firmware.log_path)
+            # look for new events
+            got_event = self.inotify_events(f"{firmware.path_to_logs}/emba.log")
+            for eve in got_event:
+                for flag in flags.from_mask(eve.mask):
+                    # Ignore irrelevant flags TODO: add other possible flags
+                    if flag is flags.CLOSE_NOWRITE or flag is flags.CLOSE_WRITE:
+                        pass
+                    # Act on file change
+                    elif flag is flags.MODIFY:
+                        # get the actual difference
+                        tmp = self.get_diff(firmware.path_to_logs)
+                        # send changes to frontend
+                        self.input_processing(tmp)
+                        # copy diff to tmp file
+                        self.copy_file_content(tmp, firmware.path_to_logs)
 
     def process_line(self, inp, pat):
 
@@ -172,6 +173,9 @@ class LogReader:
         inotify = INotify()
         # TODO: add/remove flags to watch
         watch_flags = flags.CREATE | flags.DELETE | flags.MODIFY | flags.DELETE_SELF | flags.CLOSE_NOWRITE | flags.CLOSE_WRITE
-        # add watch on file
-        inotify.add_watch(path, watch_flags)
-        return inotify.read()
+        try:
+            # add watch on file
+            inotify.add_watch(path, watch_flags)
+            return inotify.read()
+        except:
+            return []
