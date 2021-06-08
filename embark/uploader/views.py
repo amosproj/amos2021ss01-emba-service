@@ -19,6 +19,7 @@ from .boundedExecutor import BoundedExecutor
 from .archiver import Archiver
 from .forms import FirmwareForm
 from .models import Firmware, FirmwareFile
+from embark.logreader import LogReader
 
 logger = logging.getLogger('web')
 
@@ -44,6 +45,10 @@ def about(request):
 
 
 # TODO: have the right trigger, this is just for testing purpose
+def start(request):
+    LogReader()
+    return HttpResponse("hi")
+
 def download_zipped(request, analyze_id):
     """
     download zipped log directory
