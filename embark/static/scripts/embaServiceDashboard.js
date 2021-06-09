@@ -1,41 +1,55 @@
-const socket = new WebSocket(
+var socket;
+
+function connect() {
+
+    socket = new WebSocket(
         'ws://'
         + location.hostname + ':8001'
-        + '/ws/progress/strin'
-);
+        + '/ws/progress/'
+    );
 
-var current_module = "no module"
-var current_phase = "no phase"
-socket.onopen = function (e) {
-    console.log("[open] Connection established");
-};
+    var current_module = "no module"
+    var current_phase = "no phase"
+    socket.onopen = function (e) {
+        console.log("[open] Connection established");
+    };
 
-// this method is called whenever a message from the backend arrives
-socket.onmessage = function (event) {
+    // this method is called whenever a message from the backend arrives
+    socket.onmessage = function (event) {
 
-    var data = JSON.parse(event.data);
-    console.log(data);
-    if (current_phase !== data.phase) {
-        //console.log(data.phase)
-        livelog_phase(data.phase)
+        var data = JSON.parse(event.data);
+        console.log(data);
+        if (current_phase !== data.phase) {
+            //console.log(data.phase)
+            livelog_phase(data.phase)
+        }
+        if (current_module !== data.module) {
+            livelog_module(data.module)
+        }
+        current_phase = data.phase
+        current_module = data.module
+
+        makeProgress(data.percentage)
     }
-    if (current_module !== data.module) {
-        livelog_module(data.module)
-    }
-    current_phase = data.phase
-    current_module = data.module
+    // this method is called when the websocket connection is closed
 
-    makeProgress(data.percentage)
+    socket.onclose = function (event) {
+        console.log(event.reason)
+        console.error('Chat socket closed unexpectedly');
+        // setTimeout(function () {
+        //     connect();
+        // }, 1000);
+    };
+
+    socket.onerror = function(err) {
+        console.error('Socket encountered error: ', err.message, 'Closing socket');
+        socket.close();
+    };
 }
-// this method is called when the websocket connection is closed
-socket.onclose = function (event) {
-    console.log(event.code)
-    console.error('Chat socket closed unexpectedly');
-};
 
 function embaProgress() {
-    // example for websocket setup in frontent TODO: remove the whole file later
     console.log("Maxi geht steil")
+
     setInterval(function(){ socket.send("Hello"); console.log("Maxi geht steiler"); }, 3000);
     // this method is called when the connection is established
 }

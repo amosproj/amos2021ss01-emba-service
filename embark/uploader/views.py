@@ -48,7 +48,8 @@ def about(request):
 
 # TODO: have the right trigger, this is just for testing purpose
 def start(request):
-    LogReader()
+    # id = Firmware.objects.all()
+    LogReader(1)
     return HttpResponse("hi")
 
 def download_zipped(request, analyze_id):

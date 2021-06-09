@@ -10,13 +10,13 @@ from channels.generic.websocket import WebsocketConsumer
 from django.conf import settings
 from uploader.models import Firmware
 from inotify_simple import INotify, flags
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 logger = logging.getLogger('web')
 
-process_map = {}
 
-
-class LogReader():
+class LogReader:
 
     def __init__(self, firmware_id):
         super().__init__()
@@ -29,7 +29,8 @@ class LogReader():
             "module": "",
             "phase": "",
         }
-
+        # self.channel_layer = get_channel_layer()
+        self.process_map = {}
         # start processing
         self.read_loop()
 
@@ -41,15 +42,28 @@ class LogReader():
         self.status_msg["module"] = stream_item_list[0]
         self.status_msg["percentage"] = percentage
         tmp_mes = self.status_msg
-        process_map[self.firmware_id].append(tmp_mes)
         logger.debug(tmp_mes)
+        self.process_map[self.firmware_id].append(tmp_mes)
+
+        # THIS CALL DOESN'T INVOKE THE METHOD IN CONSUMERS -> TRIGGER NOT WORKING
+        channel_layer = get_channel_layer()
+        logger.debug(channel_layer)
+        async_to_sync(channel_layer.group_send)(
+            'updatesgroup',
+            {"type": 'send_message_to_frontend', "message": "BBBBBBBH"})
         # self.process_map.append(tmp_mes)
 
     # update dictionary with phase changes
     def update_phase(self, stream_item_list):
         self.status_msg["phase"] = stream_item_list[1]
         tmp_mes = self.status_msg
-        process_map[self.firmware_id].append(tmp_mes)
+        self.process_map[self.firmware_id].append(tmp_mes)
+        # THIS CALL DOESN'T INVOKE THE METHOD IN CONSUMERS -> TRIGGER NOT WORKING
+        channel_layer = get_channel_layer()
+        logger.debug(channel_layer)
+        async_to_sync(channel_layer.group_send)(
+            'updatesgroup',
+            {'type': 'send_message_to_frontend', 'message': "AAAAAAA"})
 
     def read_loop(self):
 
@@ -60,14 +74,13 @@ class LogReader():
                  :return: None
        """
         while True:
-
+            #logger.debug(process_map)
             firmware = Firmware.objects.get(pk=self.firmware_id)
-            logger.debug(firmware)
-            if firmware.id not in process_map.keys():
-                logger.debug("New firmware_id: " + str(firmware.id))
-                process_map[firmware.id] = []
+            open(f"{firmware.path_to_logs}/emba_new.log", 'w+')
+            # logger.debug(firmware)
+            if firmware.id not in self.process_map.keys():
                 # if file does not exist create it otherwise delete its content
-                open(f"{firmware.path_to_logs}/emba_new.log", 'w+')
+                self.process_map[firmware.id] = []
 
             # look for new events
             got_event = self.inotify_events(f"{firmware.path_to_logs}/emba.log")

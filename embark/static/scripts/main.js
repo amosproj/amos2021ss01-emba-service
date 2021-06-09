@@ -32,6 +32,7 @@
 
 function uploader() {
     try {
+        connect()
         $.ajax({
             url: "upload/",
             datatype: "html",
