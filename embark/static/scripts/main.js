@@ -112,10 +112,12 @@ function helpTextOn() {
     }
 }
 
-function mytest() {
-    var isValid = confirm('Are you sure ?');
+function confirmDelete(event) {
+    var isValid = confirm(`Are you sure to delete the following firmware file: ${event.target.elements.firmware.value} ?`);
     if (!isValid) {
         event.preventDefault();
-        alert("It wont delete. Yay!");
+        alert("deletion cancelled");
+    } else {
+        alert(`firmware file deleted: ${event.target.elements.firmware.value}`);
     }
 }
