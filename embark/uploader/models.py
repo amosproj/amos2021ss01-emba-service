@@ -107,6 +107,10 @@ class FirmwareFile(models.Model):
 
 @receiver(pre_delete, sender=FirmwareFile)
 def delete_img_pre_delete_post(sender, instance, *args, **kwargs):
+    """
+    callback function
+    delete the firmwarefile and folder structure in storage on recieve
+    """
     if instance.file:
         logger = logging.getLogger('web')
         logger.debug(instance.get_abs_folder_path())
@@ -116,7 +120,7 @@ def delete_img_pre_delete_post(sender, instance, *args, **kwargs):
 class Firmware(models.Model):
     """
     class Firmware
-    Model to firmware to be analyzed, basic/expert emba flags and metadata on the analyze process
+    Model of firmware to be analyzed, basic/expert emba flags and metadata on the analyze process
     """
     MAX_LENGTH = 127
 
@@ -240,6 +244,10 @@ class Firmware(models.Model):
 
 
 class DeleteFirmware(models.Model):
+    """
+    class DeleteFirmware
+    Model of firmware to be selected for deletion
+    """
 
     MAX_LENGTH = 127
 

@@ -1,9 +1,6 @@
 from django import forms
-from django.shortcuts import render
 import os
-import json
 import logging
-import sys
 
 from django.conf import settings
 from django.shortcuts import render
@@ -13,9 +10,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from django.core.files.storage import FileSystemStorage
-
-from .archiver import Archiver
 
 # TODO: Add required headers like type of requests allowed later.
 
@@ -24,7 +18,7 @@ from .archiver import Archiver
 from .boundedExecutor import BoundedExecutor
 from .archiver import Archiver
 from .forms import FirmwareForm, DeleteFirmwareForm
-from .models import Firmware, FirmwareFile, DeleteFirmware
+from .models import Firmware, FirmwareFile
 
 logger = logging.getLogger('web')
 
@@ -110,13 +104,13 @@ def upload_file(request):
 
             # inject into bounded Executor
             if BoundedExecutor.submit_firmware(firmware_flags=firmware_flags, firmware_file=firmware_file):
-                return HttpResponseRedirect("../../home/#uploader")
+                return HttpResponseRedirect("../../home/upload")
             else:
                 return HttpResponse("queue full")
         else:
-            logger.error("Posted Form is unvalid")
+            logger.error("Posted Form is invalid")
             logger.error(form.errors)
-            return HttpResponse("Unvalid Form")
+            return HttpResponse("Invalid Form")
 
     FirmwareForm.base_fields['firmware'] = forms.ModelChoiceField(queryset=FirmwareFile.objects)
     DeleteFirmwareForm.base_fields['firmware'] = forms.ModelChoiceField(queryset=FirmwareFile.objects)
@@ -193,8 +187,16 @@ def reports(request):
     html_body = get_template('uploader/reports.html')
     return HttpResponse(html_body.render())
 
+
 @require_http_methods(["POST"])
 def delete_file(request):
+    """
+    file deletion on POST requests with attached present firmware file
+
+    :params request: HTTP request
+
+    :return: HttpResponse including the status
+    """
 
     if request.method == 'POST':
         form = DeleteFirmwareForm(request.POST)
@@ -206,11 +208,11 @@ def delete_file(request):
             firmware_file = form.cleaned_data['firmware']
             firmware_file.delete()
 
-            return HttpResponseRedirect("../../home/#uploader")
+            return HttpResponseRedirect("../../home/upload")
 
         else:
             logger.error(f"Form {form} is invalid")
             logger.error(f"{form.errors}")
-            return HttpResponse("Unvalid Form")
+            return HttpResponse("invalid Form")
 
-    return HttpResponseRedirect("../../home/#uploader")
+    return HttpResponseRedirect("../../home/upload")
