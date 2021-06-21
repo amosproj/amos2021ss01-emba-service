@@ -15,6 +15,9 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'content/css/home.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'content/css/fileUpload.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'content/css/serviceDashboard.css' %}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+	
+
 
 	<!--script for fonts/icons-->
 	<script src="https://kit.fontawesome.com/67d45e2d15.js" crossorigin="anonymous"></script>
@@ -26,12 +29,15 @@
 	{% comment %} <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> {% endcomment %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
 
 	<!--javascript files-->
 	<script src="https://www.w3schools.com/lib/w3.js"></script>
 	<script src="{% static 'scripts/main.js' %}"></script>
 	<script src="{% static 'scripts/fileUpload.js' %}"></script>
 	<script src="{% static 'scripts/embaServiceDashboard.js' %}"></script>
+	<script src="{% static 'scripts/alertBox.js' %}"></script>
 
 </head>
 	<div class="container-fluid">
@@ -88,5 +94,10 @@
 		{% comment %} <section class="section4" id="details">Details</section>			 {% endcomment %}
 		<section class="section5" id="service">Service</section>
 		<section class="section6" id="reports">Reports</section>
+	</div>
+
+	<div id="confirm">
+		<div class="message">This is a warning message.</div>
+		   <button class="yes">OK</button>
 	</div>
 </html>
