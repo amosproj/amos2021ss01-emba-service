@@ -1,5 +1,5 @@
 // TODO frontend is currently doing nothing with the data from backend. Merge this Branch with Ravi's work
-
+// TODO work in this file
 // start socket connection just once
 var socket = new WebSocket(
         'ws://'
