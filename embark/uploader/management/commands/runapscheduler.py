@@ -72,8 +72,8 @@ class Command(BaseCommand):
         # start resource_tracker
         scheduler.add_job(
             resource_tracker,
-            trigger=CronTrigger(hour="00"),  # Every hour
-            id="my_job",  # The `id` assigned to each job MUST be unique
+            trigger=CronTrigger(minute="00"),  # Every hour
+            id="resource_tracker",  # The `id` assigned to each job MUST be unique
             max_instances=1,
             replace_existing=True,
         )
