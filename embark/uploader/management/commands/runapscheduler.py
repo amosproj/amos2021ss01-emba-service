@@ -1,4 +1,3 @@
-# runapscheduler.py
 import logging
 import psutil
 
@@ -23,7 +22,7 @@ MEMORY_UPPER_BOUND = 80
 
 def resource_tracker():
     """
-    This job tracks the current cpu and memory usage and stores Timestamp Obejcts
+    This job tracks the current cpu and memory usage and stores Timestamp objects
     in the db for further usage.
 
     """
@@ -41,8 +40,6 @@ def resource_tracker():
     res_timestamp.save()
 
 
-# The `close_old_connections` decorator ensures that database connections, that have become
-# unusable or are obsolete, are closed before and after our job has run.
 @util.close_old_connections
 def delete_old_job_executions(max_age=1_209_600):
     """
@@ -63,9 +60,17 @@ def delete_old_job_executions(max_age=1_209_600):
 
 
 class Command(BaseCommand):
+    """
+    Extends Base command to feature another command called runapscheduler by the manage.py script
+    like this "python3 manage.py runapscheduler"
+    """
+
     help = "Runs resource tracker as well as cleanup process."
 
     def handle(self, *args, **options):
+        """
+        handler for runapscheduler command
+        """
         scheduler = BlockingScheduler(timezone=settings.TIME_ZONE)
         scheduler.add_jobstore(DjangoJobStore(), "default")
 
