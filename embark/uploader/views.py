@@ -1,40 +1,29 @@
-from django import forms
-import os
-from os import path
-import json
-import logging
-
 from django.conf import settings
 
+import logging
+import os
+import time
+from http import HTTPStatus
+
 from django.shortcuts import render
+from django import forms
 from django.template.loader import get_template
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from django.conf import settings
-
-import os
-
-from .archiver import Archiver
 
 
-import time
 from django.http import StreamingHttpResponse
 from django.template import loader
+from django.forms.models import model_to_dict
 
 # TODO: Add required headers like type of requests allowed later.
 # home page test view TODO: change name accordingly
-from .boundedExecutor import BoundedExecutor
-from .archiver import Archiver
-from .forms import FirmwareForm, DeleteFirmwareForm
-from .models import Firmware, FirmwareFile
-from embark.logreader import LogReader
-
 from uploader.boundedExecutor import BoundedExecutor
 from uploader.archiver import Archiver
 from uploader.forms import FirmwareForm, DeleteFirmwareForm
-from uploader.models import Firmware, FirmwareFile, DeleteFirmware
+from uploader.models import Firmware, FirmwareFile, DeleteFirmware, Result
 
 logger = logging.getLogger('web')
 
@@ -326,3 +315,26 @@ def delete_file(request):
             return HttpResponse("invalid Form")
 
     return HttpResponseRedirect("../../home/upload")
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def get_individual_report(request):
+    firmware_id = request.GET.get('id', None)
+    if not firmware_id:
+        logger.error('Bad request for get_individual_report')
+        return JsonResponse(data={'error': 'Bad request'}, status=HTTPStatus.BAD_REQUEST)
+    try:
+        result = Result.objects.get(firmware_id=int(firmware_id))
+        return JsonResponse(data=model_to_dict(result), status=HTTPStatus.OK)
+    except Result.DoesNotExist:
+        logger.error(f'Report for firmware_id: {firmware_id} not found in database')
+        return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
+
+
+# @csrf_exempt
+# @require_http_methods(["POST"])
+# def get_accumulated_reports(request):
+#     results = Result.objects.all()
+#     charfields =
+#     return HttpResponse(html_body.render())
