@@ -3,16 +3,16 @@ import os
 import shutil
 import subprocess
 
-from pathlib import Path
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from threading import BoundedSemaphore
 
 from django.utils.datetime_safe import datetime
 from django.conf import settings
 
-from .archiver import Archiver
-from .models import Firmware
+from uploader.archiver import Archiver
+from uploader.models import Firmware, Result
 from embark.logreader import LogReader
+
 
 logger = logging.getLogger('web')
 
@@ -60,6 +60,11 @@ class BoundedExecutor:
 
             # success
             logger.info(f"Success: {cmd}")
+
+            # Feeding report to DB
+            logger.info(f'Reading report from:')
+            # TODO: Read CSV
+            # r = Result.objects.create()
 
             # take care of cleanup
             if active_analyzer_dir:
