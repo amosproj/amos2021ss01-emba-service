@@ -1,9 +1,18 @@
+from http import HTTPStatus
+
+from django import forms
 from django.conf import settings
 
 import logging
 import os
 import time
 from http import HTTPStatus
+from os import path
+import json
+import logging
+
+from django.conf import settings
+from django.forms import model_to_dict
 
 from django.shortcuts import render
 from django import forms
@@ -13,6 +22,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 
+from .archiver import Archiver
 
 from django.http import StreamingHttpResponse
 from django.template import loader
@@ -20,10 +30,12 @@ from django.forms.models import model_to_dict
 
 # TODO: Add required headers like type of requests allowed later.
 # home page test view TODO: change name accordingly
+from embark.logreader import LogReader
+
 from uploader.boundedExecutor import BoundedExecutor
 from uploader.archiver import Archiver
 from uploader.forms import FirmwareForm, DeleteFirmwareForm
-from uploader.models import Firmware, FirmwareFile, DeleteFirmware, Result
+from uploader.models import Firmware, FirmwareFile, DeleteFirmware, Result, ResourceTimestamp
 
 logger = logging.getLogger('web')
 
@@ -315,6 +327,21 @@ def delete_file(request):
             return HttpResponse("invalid Form")
 
     return HttpResponseRedirect("../../home/upload")
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_load(request):
+    try:
+        logger.error(f'export load')
+        query_set = ResourceTimestamp.objects.all()
+        result = {}
+        for k in model_to_dict(query_set[0]).keys():
+            result[k] = tuple(model_to_dict(d)[k] for d in query_set)
+        return JsonResponse(data=result, status=HTTPStatus.OK)
+    except ResourceTimestamp.DoesNotExist:
+        logger.error(f'ResourceTimestamps not found in database')
+        return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
 
 
 @csrf_exempt
