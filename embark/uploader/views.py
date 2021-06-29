@@ -166,7 +166,6 @@ def report_dashboard(request):
     """
 
     finished_firmwares = Firmware.objects.all().filter(finished=True)
-    logger.debug(f"firmwares: \n {finished_firmwares}")
     return render(request, 'uploader/reportDashboard.html', {'finished_firmwares': finished_firmwares})
 
 
@@ -331,7 +330,6 @@ def delete_file(request):
 @require_http_methods(["GET"])
 def get_load(request):
     try:
-        logger.error(f'export load')
         query_set = ResourceTimestamp.objects.all()
         result = {}
         for k in model_to_dict(query_set[0]).keys():

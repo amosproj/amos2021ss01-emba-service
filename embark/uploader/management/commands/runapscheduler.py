@@ -84,7 +84,6 @@ class Command(BaseCommand):
 
         # configure CronTrigger
         if options['test']:
-            logger.info("test")
             # Every hour
             resource_tracker_trigger = CronTrigger(second="*/1")
             # everyday at midnight
