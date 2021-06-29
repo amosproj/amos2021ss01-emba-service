@@ -112,7 +112,9 @@ class LogReader:
             firmware = Firmware.objects.get(pk=self.firmware_id)
 
             # if file does not exist create it otherwise delete its content
-            open(f"{firmware.path_to_logs}emba_new.log", 'w+')
+            pat = f"/app/emba/{settings.LOG_ROOT}/emba_new_{self.firmware_id}.log"
+            #logger.info(pat)
+            open(pat, 'w+')
 
             # create an entry for the id in the process map
             global process_map
@@ -120,7 +122,7 @@ class LogReader:
                 process_map[self.firmware_id_str] = []
 
             # look for new events
-            got_event = self.inotify_events(f"{firmware.path_to_logs}emba.log")
+            got_event = self.inotify_events(f"{firmware.path_to_logs}/emba.log")
 
             for eve in got_event:
                 for flag in flags.from_mask(eve.mask):
@@ -131,6 +133,8 @@ class LogReader:
                     elif flag is flags.MODIFY:
                         # get the actual difference
                         tmp = self.get_diff(firmware.path_to_logs)
+                        logger.info("AAAAAAAAAAAAAAAAAAAAAAA")
+                        logger.info(tmp)
                         # send changes to frontend
                         self.input_processing(tmp)
                         # copy diff to tmp file
@@ -158,7 +162,7 @@ class LogReader:
                   :return: None
         """
 
-        with open(f"{log_path}emba_new.log", 'a+') as diff_file:
+        with open(f"/app/emba/{settings.LOG_ROOT}/emba_new_{self.firmware_id}.log", 'a+') as diff_file:
             diff_file.write(diff)
 
     def get_diff(self, log_path):
@@ -171,8 +175,8 @@ class LogReader:
         """
 
         # open the two files to get diff from
-        old_file = open(f"{log_path}emba.log")
-        new_file = open(f"{log_path}emba_new.log")
+        old_file = open(f"{log_path}/emba.log")
+        new_file = open(f"/app/emba/{settings.LOG_ROOT}/emba_new_{self.firmware_id}.log")
 
         diff = difflib.ndiff(old_file.readlines(), new_file.readlines())
         return ''.join(x[2:] for x in diff if x.startswith('- '))
@@ -220,6 +224,7 @@ class LogReader:
         # TODO: add more observers for more information
 
     def inotify_events(self, path):
+        logger.info("Hello" + path)
         inotify = INotify()
         # TODO: add/remove flags to watch
         watch_flags = flags.CREATE | flags.DELETE | flags.MODIFY | flags.DELETE_SELF | flags.CLOSE_NOWRITE | flags.CLOSE_WRITE

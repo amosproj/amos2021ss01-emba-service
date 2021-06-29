@@ -27,7 +27,7 @@ executor = ThreadPoolExecutor(max_workers=max_workers)
 semaphore = BoundedSemaphore(max_queue + max_workers)
 
 # emba directories
-emba_script_location = "/app/emba/emba.sh"
+emba_script_location = "cd /app/emba/ && ./emba.sh"
 
 
 class BoundedExecutor:
@@ -146,7 +146,7 @@ class BoundedExecutor:
         emba_flags = firmware_flags.get_flags()
 
         # evaluate meta information and safely create log dir
-        emba_log_location = f"/app/emba/{settings.LOG_ROOT}/{firmware_flags.pk}"
+        emba_log_location = f"/app/emba/{settings.LOG_ROOT}/{firmware_flags.id}"
 
         firmware_flags.path_to_logs = emba_log_location
         firmware_flags.save()
