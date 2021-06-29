@@ -134,6 +134,7 @@ class BoundedExecutor:
             logger.error(f"Uploaded file: {firmware_file} doesnt comply with processable files.\n zip folder with no "
                          f"extra directory in between.")
             shutil.rmtree(active_analyzer_dir)
+            return None
 
         # get emba flags from command parser
         emba_flags = firmware_flags.get_flags()
