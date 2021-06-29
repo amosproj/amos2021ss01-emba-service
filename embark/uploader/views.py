@@ -319,14 +319,14 @@ def delete_file(request):
             firmware_file = form.cleaned_data['firmware']
             firmware_file.delete()
 
-            return HttpResponseRedirect("../../home/upload")
+            return HttpResponseRedirect("../../home/upload/1/")
 
         else:
             logger.error(f"Form {form} is invalid")
             logger.error(f"{form.errors}")
             return HttpResponse("invalid Form")
 
-    return HttpResponseRedirect("../../home/upload")
+    return HttpResponseRedirect("../../home/upload/1/")
 
 
 @csrf_exempt

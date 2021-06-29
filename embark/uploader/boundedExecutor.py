@@ -158,7 +158,10 @@ class BoundedExecutor:
         emba_fut = BoundedExecutor.submit(cls.run_emba_cmd, emba_cmd, firmware_flags.pk, active_analyzer_dir)
 
         # start log_reader TODO: cancel future and return future
-        log_read_fut = BoundedExecutor.submit(LogReader, firmware_flags.pk)
+        threaded = False
+        if '-t' in emba_cmd:
+            threaded = True
+        log_read_fut = BoundedExecutor.submit(LogReader, firmware_flags.pk, threaded)
 
         return emba_fut
 

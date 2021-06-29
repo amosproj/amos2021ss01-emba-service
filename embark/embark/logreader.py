@@ -23,7 +23,7 @@ process_map = {}
 
 class LogReader:
 
-    def __init__(self, firmware_id):
+    def __init__(self, firmware_id, threaded):
 
         # global module count and status_msg directory
         self.module_count = 0
@@ -33,6 +33,9 @@ class LogReader:
         # set variables for channels communication
         self.room_group_name = 'updatesgroup'
         self.channel_layer = get_channel_layer()
+
+        # boolean for parallel execution
+        self.threaded = threaded
 
         # for testing
         self.test_list1 = []
@@ -54,7 +57,11 @@ class LogReader:
     def update_status(self, stream_item_list):
         # progress percentage TODO: improve percentage calculation
         self.module_count += 1
-        percentage = self.module_count / 35
+        percentage = 0
+        if self.threaded:
+            percentage = self.module_count / 123
+        else:
+            percentage = self.module_count / 35
         self.status_msg["module"] = stream_item_list[0]
         self.status_msg["percentage"] = percentage
 
@@ -113,7 +120,6 @@ class LogReader:
 
             # if file does not exist create it otherwise delete its content
             pat = f"/app/emba/{settings.LOG_ROOT}/emba_new_{self.firmware_id}.log"
-            #logger.info(pat)
             open(pat, 'w+')
 
             # create an entry for the id in the process map
@@ -133,8 +139,6 @@ class LogReader:
                     elif flag is flags.MODIFY:
                         # get the actual difference
                         tmp = self.get_diff(firmware.path_to_logs)
-                        logger.info("AAAAAAAAAAAAAAAAAAAAAAA")
-                        logger.info(tmp)
                         # send changes to frontend
                         self.input_processing(tmp)
                         # copy diff to tmp file
@@ -224,7 +228,6 @@ class LogReader:
         # TODO: add more observers for more information
 
     def inotify_events(self, path):
-        logger.info("Hello" + path)
         inotify = INotify()
         # TODO: add/remove flags to watch
         watch_flags = flags.CREATE | flags.DELETE | flags.MODIFY | flags.DELETE_SELF | flags.CLOSE_NOWRITE | flags.CLOSE_WRITE
