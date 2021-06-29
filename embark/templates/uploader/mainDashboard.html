@@ -44,7 +44,8 @@
                     borderWidth: 2,
                     hoverBorderWidth: 8,
                     hoverBorderColor: 'rgba(255, 127, 64, 1)',
-                    fill: true
+                    fill: true,
+                    cubicInterpolationMode: 'monotone'
                 },
                 {
                     label: 'MEM',
@@ -54,7 +55,8 @@
                     borderWidth: 2,
                     hoverBorderWidth: 8,
                     hoverBorderColor:'rgba(64,127,255,1)',
-                    fill: true
+                    fill: true,
+                    cubicInterpolationMode: 'monotone'
                 }]
             },
             options: {
@@ -77,6 +79,12 @@
                         bottom: 0,
                         top: 0
                     }
+                },
+                scales: {
+                  y: {
+                    min: 0,
+                    max: 100,
+                  }
                 },
                 tooltips: {
                     enabled: true
