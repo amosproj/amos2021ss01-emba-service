@@ -61,13 +61,11 @@ class BoundedExecutor:
             # success
             logger.info(f"Success: {cmd}")
 
-            # read f50_aggregator and store it into a Result form
-            cls.csv_read(primary_key)
+            emba_log_location = f"/app/emba/{settings.LOG_ROOT}/{primary_key}/"
 
-            # Feeding report to DB
+            # read f50_aggregator and store it into a Result form
             logger.info(f'Reading report from:')
-            # TODO: Read CSV
-            # r = Result.objects.create()
+            cls.csv_read(primary_key, emba_log_location)
 
             # take care of cleanup
             if active_analyzer_dir:
@@ -196,13 +194,12 @@ class BoundedExecutor:
         executor.shutdown(wait)
 
     @classmethod
-    def csv_read(cls, pk):
+    def csv_read(cls, pk, path):
         """
         This job reads the F50_aggregator file and stores its content into the Result model
         """
-        csv_file_loc = "f50_aggr.csv"
 
-        with open(csv_file_loc, newline='\n') as csv_file:
+        with open(path, newline='\n') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=';')
             csv_list = []
             for row in csv_reader:
@@ -219,5 +216,36 @@ class BoundedExecutor:
                         pass
 
         logger.info(res_dict)
-
-        return res_dict
+        res_dict.pop('FW_path')
+        res = Result(
+            firmware=Firmware.objects.get(id=pk),
+            emba_command=res_dict["emba_command"],
+            architecture_verified=res_dict["architecture_verified"],
+            os_unverified=res_dict["os_unverified"],
+            os_verified=res_dict["os_verified"],
+            files=res_dict["files"],
+            directories=res_dict["directories"],
+            entropy_value=res_dict["entropy_value"],
+            shell_scripts=res_dict["shell_scripts"],
+            shell_script_vulns=res_dict["shell_script_vulns"],
+            kernel_modules=res_dict["kernel_modules"],
+            kernel_modules_lic=res_dict["kernel_modules_lic"],
+            interesting_files=res_dict["interesting_files"],
+            post_files=res_dict["post_files"],
+            canary=res_dict["canary"],
+            canary_per=res_dict["canary_per"],
+            relro=res_dict["relro"],
+            relro_per=res_dict["relro_per"],
+            nx=res_dict["nx"],
+            nx_per=res_dict["nx_per"],
+            pie=res_dict["pie"],
+            pie_per=res_dict["pie_per"],
+            stripped=res_dict["stripped"],
+            stripped_per=res_dict["stripped_per"],
+            bins_checked=res_dict["bins_checked"],
+            strcpy=res_dict["strcpy"],
+            strcpy_bin=res_dict["strcpy_bin"],
+            versions_identified=res_dict["versions_identified"]
+        )
+        res.save()
+        return res

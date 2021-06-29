@@ -245,6 +245,9 @@ class Firmware(models.Model):
 
 
 class Result(models.Model):
+    # TODO missing: emba_command, os_unverified, bins_checked, strcpy_bin
+    # TODO different: FW_path/firmware
+
     firmware = models.ForeignKey(Firmware, on_delete=models.CASCADE, help_text='')
     architecture_verified = models.CharField(blank=True, null=True, max_length=100, help_text='')
     os_verified = models.CharField(blank=True, null=True, max_length=100, help_text='')

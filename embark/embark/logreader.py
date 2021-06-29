@@ -28,6 +28,7 @@ class LogReader:
         # global module count and status_msg directory
         self.module_count = 0
         self.firmware_id = firmware_id
+        self.firmware_id_str = str(self.firmware_id)
 
         # set variables for channels communication
         self.room_group_name = 'updatesgroup'
@@ -63,7 +64,7 @@ class LogReader:
         # append it to the data structure
         global process_map
         if self.firmware_id > 0:
-            process_map[self.firmware_id].append(tmp_mes)
+            process_map[self.firmware_id_str].append(tmp_mes)
 
         # send it to room group
         if self.firmware_id > 0:
@@ -84,7 +85,7 @@ class LogReader:
 
         global process_map
         if self.firmware_id > 0:
-            process_map[self.firmware_id].append(tmp_mes)
+            process_map[self.firmware_id_str].append(tmp_mes)
 
         # send it to room group
         if self.firmware_id > 0:
@@ -115,8 +116,8 @@ class LogReader:
 
             # create an entry for the id in the process map
             global process_map
-            if firmware.id not in process_map.keys():
-                process_map[firmware.id] = []
+            if self.firmware_id_str not in process_map.keys():
+                process_map[self.firmware_id_str] = []
 
             # look for new events
             got_event = self.inotify_events(f"{firmware.path_to_logs}emba.log")
