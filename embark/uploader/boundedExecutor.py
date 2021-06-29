@@ -1,3 +1,4 @@
+import csv
 import logging
 import os
 import shutil
@@ -12,7 +13,6 @@ from django.conf import settings
 from uploader.archiver import Archiver
 from uploader.models import Firmware, Result
 from embark.logreader import LogReader
-
 
 logger = logging.getLogger('web')
 
@@ -60,6 +60,9 @@ class BoundedExecutor:
 
             # success
             logger.info(f"Success: {cmd}")
+
+            # read f50_aggregator and store it into a Result form
+            cls.csv_read(primary_key)
 
             # Feeding report to DB
             logger.info(f'Reading report from:')
@@ -191,3 +194,30 @@ class BoundedExecutor:
         """See concurrent.futures.Executor#shutdown"""
 
         executor.shutdown(wait)
+
+    @classmethod
+    def csv_read(cls, pk):
+        """
+        This job reads the F50_aggregator file and stores its content into the Result model
+        """
+        csv_file_loc = "f50_aggr.csv"
+
+        with open(csv_file_loc, newline='\n') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=';')
+            csv_list = []
+            for row in csv_reader:
+                csv_list.append(row)
+                res_dict = {}
+                for ele in csv_list:
+                    if len(ele) == 2:
+                        res_dict[ele[0]] = ele[1:]
+                    elif len(ele) == 3:
+                        if not ele[0] in res_dict.keys():
+                            res_dict[ele[0]] = {}
+                        res_dict[ele[0]][ele[1]] = ele[2]
+                    else:
+                        pass
+
+        logger.info(res_dict)
+
+        return res_dict

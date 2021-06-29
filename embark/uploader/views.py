@@ -343,6 +343,18 @@ def get_load(request):
         logger.error(f'ResourceTimestamps not found in database')
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
 
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_result(request):
+    try:
+        query_ = Result.objects.all()
+        result = {}
+        for i in model_to_dict(query_[0]).keys():
+            result[i] = tuple(model_to_dict(x)[i] for x in query_)
+        return JsonResponse(data=result, status=HTTPStatus.OK)
+    except Result.DoesNotExist:
+        logger.error(f'No Result found in database')
+        return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
 
 @csrf_exempt
 @require_http_methods(["POST"])

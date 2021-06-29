@@ -19,7 +19,6 @@ logger = logging.getLogger("web")
 CPU_UPPER_BOUND = 90
 MEMORY_UPPER_BOUND = 80
 
-
 def resource_tracker():
     """
     This job tracks the current cpu and memory usage and stores Timestamp objects
