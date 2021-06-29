@@ -16,6 +16,7 @@
                 <th scope="col">End Date</th>
                 <th scope="col">Actions</th>
                 <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
             </thead>
 
@@ -37,6 +38,8 @@
                             <button type="submit" class="btn" >Run Emba</button>
                         </form>
                     </td>
+                    <td>{{ firmware.get_flags }}</td>
+
                 </tr>
             {% endfor %}
             </tbody>
@@ -49,7 +52,55 @@
 {% block js %}
     <script>
         $(document).ready(function() {
-            $('#report-table').DataTable();
+            let table = $('#report-table').DataTable({
+                "columnDefs": [
+                    {
+                        "targets": [7],
+                        "visible": false,
+                        "searchable": false
+                    }
+                ]
+            } );
+
+            /* Formatting function for row details - modify as you need */
+            function format ( d ) {
+                // `d` is the original data object for the row
+                return '<container>'+
+                    '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                        '<tr>'+
+                            '<td>Full name:</td>'+
+                            '<td>'+d[1]+'</td>'+
+                        '</tr>'+
+                        '<tr>'+
+                            '<td>Flags:</td>'+
+                            '<td>'+d[7]+'</td>'+
+                        '</tr>'+
+                        '<tr>'+
+                            '<td>Command:</td>'+
+                            '<td>TODO...</td>'+
+                        '</tr>'+
+                    '</table>'+
+                '</container>';
+            }
+
+            $('#report-table tbody').on('click', 'tr', function () {
+                let data = table.row( this ).data();
+
+                var tr = $(this).closest('tr');
+                var row = table.row( tr );
+
+                if ( row.child.isShown() ) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    row.child( format(row.data()) ).show();
+                    tr.addClass('shown');
+                }
+
+            } );
         } );
     </script>
 {% endblock %}
