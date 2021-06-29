@@ -67,6 +67,14 @@ class Command(BaseCommand):
 
     help = "Runs resource tracker as well as cleanup process."
 
+    def add_arguments(self, parser):
+        # Named optional argument
+        parser.add_argument(
+            '--test',
+            action='store_true',
+            help='sample every minute for testing purpose',
+        )
+
     def handle(self, *args, **options):
         """
         handler for runapscheduler command
@@ -74,11 +82,25 @@ class Command(BaseCommand):
         scheduler = BlockingScheduler(timezone=settings.TIME_ZONE)
         scheduler.add_jobstore(DjangoJobStore(), "default")
 
+        # configure CronTrigger
+        if options['test']:
+            # Every hour
+            resource_tracker_trigger = CronTrigger(second="00")
+            # everyday at midnight
+            delete_old_job_executions_tigger = CronTrigger(hour="00", minute="00", second="00")
+            delete_old_than = 60
+        else:
+            # Every hour
+            resource_tracker_trigger = CronTrigger(minute="00")
+            # everyday at midnight
+            delete_old_job_executions_tigger = CronTrigger(hour="00", minute="00")
+            delete_old_than = 1_209_600
+
         # start resource_tracker
         scheduler.add_job(
             resource_tracker,
-            trigger=CronTrigger(minute="00"),  # Every hour
-            id="resource_tracker",  # The `id` assigned to each job MUST be unique
+            trigger=resource_tracker_trigger,
+            id="resource_tracker",
             max_instances=1,
             replace_existing=True,
         )
@@ -87,10 +109,11 @@ class Command(BaseCommand):
         # start cleanup jobresource_tracker
         scheduler.add_job(
             delete_old_job_executions,
-            trigger=CronTrigger(hour="00", minute="00"),  # everyday at midnight
+            trigger=delete_old_job_executions_tigger,
             id="delete_old_job_executions",
             max_instances=1,
             replace_existing=True,
+            args=(delete_old_than,)
         )
         logger.info("Added weekly job: 'delete_old_job_executions'.")
 
