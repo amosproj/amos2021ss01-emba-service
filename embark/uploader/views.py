@@ -373,7 +373,7 @@ def get_individual_report(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def get_accumulated_reports(request):
+def get_accumulated_reports():
     """
     Sends accumulated results for main dashboard
     Args:
@@ -393,7 +393,7 @@ def get_accumulated_reports(request):
     data = {}
     for result in results:
         result = model_to_dict(result)
-        result.pop('firmware_id')
+        result.pop('firmware_id', None)
         for charfield in charfields:
             if charfield not in data:
                 data[charfield] = {}
