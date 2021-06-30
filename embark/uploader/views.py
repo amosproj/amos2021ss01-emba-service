@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django import forms
 import os
 from os import path
@@ -5,10 +7,11 @@ import json
 import logging
 
 from django.conf import settings
+from django.forms import model_to_dict
 
 from django.shortcuts import render
 from django.template.loader import get_template
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -25,16 +28,12 @@ from django.template import loader
 
 # TODO: Add required headers like type of requests allowed later.
 # home page test view TODO: change name accordingly
-from .boundedExecutor import BoundedExecutor
-from .archiver import Archiver
-from .forms import FirmwareForm, DeleteFirmwareForm
-from .models import Firmware, FirmwareFile
 from embark.logreader import LogReader
 
 from uploader.boundedExecutor import BoundedExecutor
 from uploader.archiver import Archiver
 from uploader.forms import FirmwareForm, DeleteFirmwareForm
-from uploader.models import Firmware, FirmwareFile, DeleteFirmware
+from uploader.models import Firmware, FirmwareFile, DeleteFirmware, ResourceTimestamp
 
 logger = logging.getLogger('web')
 
@@ -110,19 +109,20 @@ def start_analysis(request, refreshed):
     Returns:
 
     """
-    # Safely create emba_logs directory
 
+    # Safely create emba_logs directory
     if request.method == 'POST':
         form = FirmwareForm(request.POST)
 
         if form.is_valid():
             logger.info("Posted Form is valid")
-            form.save()
+            firmware_flags = form.save()
 
             # get relevant data
             # TODO: make clean db access
-            firmware_file = form.cleaned_data['firmware']
-            firmware_flags = Firmware.objects.latest('id')
+            firmware_file = FirmwareFile.objects.get(pk=firmware_flags.firmware.pk)
+
+            logger.info(firmware_file)
 
             # inject into bounded Executor
             if BoundedExecutor.submit_firmware(firmware_flags=firmware_flags, firmware_file=firmware_file):
@@ -136,9 +136,6 @@ def start_analysis(request, refreshed):
             logger.error("Posted Form is Invalid")
             logger.error(form.errors)
             return HttpResponse("Invalid Form")
-
-    FirmwareForm.base_fields['firmware'] = forms.ModelChoiceField(queryset=FirmwareFile.objects)
-    DeleteFirmwareForm.base_fields['firmware'] = forms.ModelChoiceField(queryset=FirmwareFile.objects)
 
     analyze_form = FirmwareForm()
     delete_form = DeleteFirmwareForm()
@@ -167,7 +164,6 @@ def report_dashboard(request):
     """
 
     finished_firmwares = Firmware.objects.all().filter(finished=True)
-    logger.debug(f"firmwares: \n {finished_firmwares}")
     return render(request, 'uploader/reportDashboard.html', {'finished_firmwares': finished_firmwares})
 
 
@@ -190,9 +186,9 @@ def save_file(request, refreshed):
             is_archive = Archiver.check_extensions(file.name)
 
             # ensure primary key for file saving exists
-            firmware_file = FirmwareFile(is_archive=is_archive)
-            firmware_file.save()
+            firmware_file = FirmwareFile.objects.create()
 
+            firmware_file.is_archive = is_archive
             # save file in <media-root>/pk/firmware
             firmware_file.file = file
             firmware_file.save()
@@ -318,11 +314,25 @@ def delete_file(request):
             firmware_file = form.cleaned_data['firmware']
             firmware_file.delete()
 
-            return HttpResponseRedirect("../../home/upload")
+            return HttpResponseRedirect("../../home/upload/1")
 
         else:
             logger.error(f"Form {form} is invalid")
             logger.error(f"{form.errors}")
             return HttpResponse("invalid Form")
 
-    return HttpResponseRedirect("../../home/upload")
+    return HttpResponseRedirect("../../home/upload/1")
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_load(request):
+    try:
+        query_set = ResourceTimestamp.objects.all()
+        result = {}
+        for k in model_to_dict(query_set[0]).keys():
+            result[k] = tuple(model_to_dict(d)[k] for d in query_set)
+        return JsonResponse(data=result, status=HTTPStatus.OK)
+    except ResourceTimestamp.DoesNotExist:
+        logger.error(f'ResourceTimestamps not found in database')
+        return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
