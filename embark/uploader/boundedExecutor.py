@@ -63,11 +63,11 @@ class BoundedExecutor:
             # success
             logger.info(f"Success: {cmd}")
 
-            emba_log_location = f"/app/emba/{settings.LOG_ROOT}/{primary_key}/"
+            csv_log_location = f"/app/emba/{settings.LOG_ROOT}/{primary_key}/f50_base_aggregator.csv"
 
             # read f50_aggregator and store it into a Result form
             logger.info(f'Reading report from:')
-            cls.csv_read(primary_key, emba_log_location)
+            cls.csv_read(primary_key, csv_log_location)
 
             # take care of cleanup
             if active_analyzer_dir:
