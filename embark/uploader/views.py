@@ -371,9 +371,40 @@ def get_individual_report(request):
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
 
 
-# @csrf_exempt
-# @require_http_methods(["POST"])
-# def get_accumulated_reports(request):
-#     results = Result.objects.all()
-#     charfields =
-#     return HttpResponse(html_body.render())
+@csrf_exempt
+@require_http_methods(["POST"])
+def get_accumulated_reports(request):
+    """
+    Sends accumulated results for main dashboard
+    Args:
+        request:
+
+    Returns:
+        data = {
+            'architecture_verified': {'arch_1': count, ....},
+            'os_verified': {'os_1': count, .....},
+            'all int fields in Result Model': count
+
+        }
+
+    """
+    results = Result.objects.all()
+    charfields = ['architecture_verified', 'os_verified']
+    data = {}
+    for result in results:
+        result = model_to_dict(result)
+        result.pop('firmware_id')
+        for charfield in charfields:
+            if charfield not in data:
+                data[charfield] = {}
+
+            value = result.pop(charfield)
+            if value not in data[charfield]:
+                data[charfield][value] = 0
+            data[charfield][value] += 1
+        for field in result:
+            if field not in data:
+                data[field] = 0
+            data[field] += 1
+    data['total_firmwares'] = len(results)
+    return JsonResponse(data=data, status=HTTPStatus.OK)
