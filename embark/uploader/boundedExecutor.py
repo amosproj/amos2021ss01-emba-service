@@ -210,7 +210,7 @@ class BoundedExecutor:
                 res_dict = {}
                 for ele in csv_list:
                     if len(ele) == 2:
-                        res_dict[ele[0]] = ele[1:]
+                        res_dict[ele[0]] = ele[1]
                     elif len(ele) == 3:
                         if not ele[0] in res_dict.keys():
                             res_dict[ele[0]] = {}
@@ -247,7 +247,7 @@ class BoundedExecutor:
             stripped_per=int(res_dict.get("stripped_per", 0)),
             bins_checked=int(res_dict.get("bins_checked", 0)),
             strcpy=int(res_dict.get("strcpy", 0)),
-            strcpy_bin=int(res_dict.get("strcpy_bin", 0)),
+            # strcpy_bin=int(res_dict.get("strcpy_bin", 0)),
             versions_identified=int(res_dict.get("versions_identified", 0)),
             cve_high=int(res_dict.get("cve_high", 0)),
             cve_medium=int(res_dict.get("cve_medium", 0)),
