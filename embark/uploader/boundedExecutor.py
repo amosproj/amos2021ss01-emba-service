@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 import subprocess
+import re
 
 from concurrent.futures import ThreadPoolExecutor
 from threading import BoundedSemaphore
@@ -13,6 +14,7 @@ from django.conf import settings
 from uploader.archiver import Archiver
 from uploader.models import Firmware, Result
 from embark.logreader import LogReader
+
 
 logger = logging.getLogger('web')
 
@@ -220,6 +222,12 @@ class BoundedExecutor:
 
         logger.info(res_dict)
         res_dict.pop('FW_path', None)
+
+        entropy_value = res_dict.get("entropy_value", 0)
+        if type(entropy_value) is str:
+            entropy_value = re.findall(r'(\d+\.?\d*)', ' 7.55 bits per byte.')[0]
+            entropy_value = entropy_value.strip('.')
+
         res = Result(
             firmware=Firmware.objects.get(id=pk),
             # emba_command=res_dict["emba_command"],
@@ -228,7 +236,7 @@ class BoundedExecutor:
             os_verified=res_dict.get("os_verified", ''),
             files=int(res_dict.get("files", 0)),
             directories=int(res_dict.get("directories", 0)),
-            entropy_value=float(res_dict.get("entropy_value", 0)),
+            entropy_value=float(entropy_value),
             shell_scripts=int(res_dict.get("shell_scripts", 0)),
             shell_script_vulns=int(res_dict.get("shell_script_vulns", 0)),
             kernel_modules=int(res_dict.get("kernel_modules", 0)),
