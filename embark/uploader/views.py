@@ -366,7 +366,7 @@ def get_accumulated_reports():
         data = {
             'architecture_verified': {'arch_1': count, ....},
             'os_verified': {'os_1': count, .....},
-            'all int fields in Result Model': count
+            'all int fields in Result Model': {'sum': float/int, 'count': int, 'mean': float/int}
         }
     """
     results = Result.objects.all()
