@@ -15,7 +15,6 @@ from django.conf import settings
 from django.forms import model_to_dict
 
 from django.shortcuts import render
-from django import forms
 from django.template.loader import get_template
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -26,7 +25,6 @@ from .archiver import Archiver
 
 from django.http import StreamingHttpResponse
 from django.template import loader
-from django.forms.models import model_to_dict
 
 # TODO: Add required headers like type of requests allowed later.
 # home page test view TODO: change name accordingly
@@ -111,19 +109,20 @@ def start_analysis(request, refreshed):
     Returns:
 
     """
-    # Safely create emba_logs directory
 
+    # Safely create emba_logs directory
     if request.method == 'POST':
         form = FirmwareForm(request.POST)
 
         if form.is_valid():
             logger.info("Posted Form is valid")
-            form.save()
+            firmware_flags = form.save()
 
             # get relevant data
             # TODO: make clean db access
-            firmware_file = form.cleaned_data['firmware']
-            firmware_flags = Firmware.objects.latest('id')
+            firmware_file = FirmwareFile.objects.get(pk=firmware_flags.firmware.pk)
+
+            logger.info(firmware_file)
 
             # inject into bounded Executor
             if BoundedExecutor.submit_firmware(firmware_flags=firmware_flags, firmware_file=firmware_file):
@@ -168,7 +167,6 @@ def report_dashboard(request):
     """
 
     finished_firmwares = Firmware.objects.all().filter(finished=True)
-    logger.debug(f"firmwares: \n {finished_firmwares}")
     return render(request, 'uploader/reportDashboard.html', {'finished_firmwares': finished_firmwares})
 
 
@@ -191,9 +189,9 @@ def save_file(request, refreshed):
             is_archive = Archiver.check_extensions(file.name)
 
             # ensure primary key for file saving exists
-            firmware_file = FirmwareFile(is_archive=is_archive)
-            firmware_file.save()
+            firmware_file = FirmwareFile.objects.create()
 
+            firmware_file.is_archive = is_archive
             # save file in <media-root>/pk/firmware
             firmware_file.file = file
             firmware_file.save()
@@ -333,7 +331,6 @@ def delete_file(request):
 @require_http_methods(["GET"])
 def get_load(request):
     try:
-        logger.error(f'export load')
         query_set = ResourceTimestamp.objects.all()
         result = {}
         for k in model_to_dict(query_set[0]).keys():
@@ -342,74 +339,3 @@ def get_load(request):
     except ResourceTimestamp.DoesNotExist:
         logger.error(f'ResourceTimestamps not found in database')
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
-
-@csrf_exempt
-@require_http_methods(["GET"])
-def get_result(request):
-    try:
-        query_ = Result.objects.all()
-        result = {}
-        for i in model_to_dict(query_[0]).keys():
-            result[i] = tuple(model_to_dict(x)[i] for x in query_)
-        return JsonResponse(data=result, status=HTTPStatus.OK)
-    except Result.DoesNotExist:
-        logger.error(f'No Result found in database')
-        return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
-
-@csrf_exempt
-@require_http_methods(["POST"])
-def get_individual_report(request):
-    firmware_id = request.GET.get('id', None)
-    if not firmware_id:
-        logger.error('Bad request for get_individual_report')
-        return JsonResponse(data={'error': 'Bad request'}, status=HTTPStatus.BAD_REQUEST)
-    try:
-        result = Result.objects.get(firmware_id=int(firmware_id))
-        return JsonResponse(data=model_to_dict(result), status=HTTPStatus.OK)
-    except Result.DoesNotExist:
-        logger.error(f'Report for firmware_id: {firmware_id} not found in database')
-        return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
-
-
-@csrf_exempt
-@require_http_methods(["POST"])
-def get_accumulated_reports():
-    """
-    Sends accumulated results for main dashboard
-    Args:
-        request:
-
-    Returns:
-        data = {
-            'architecture_verified': {'arch_1': count, ....},
-            'os_verified': {'os_1': count, .....},
-            'all int fields in Result Model': count
-
-        }
-
-    """
-    results = Result.objects.all()
-    charfields = ['architecture_verified', 'os_verified']
-    data = {}
-    for result in results:
-        result = model_to_dict(result)
-        result.pop('firmware_id', None)
-        for charfield in charfields:
-            if charfield not in data:
-                data[charfield] = {}
-
-            value = result.pop(charfield)
-            if value not in data[charfield]:
-                data[charfield][value] = 0
-            data[charfield][value] += 1
-        for field in result:
-            if field not in data:
-                data[field] = {'sum': 0, 'count': 0}
-            data[field]['count'] += 1
-            data[field]['sum'] += result[field]
-
-    for field in data:
-        if field not in charfields:
-            data[field]['mean'] = data[field]['sum']/data[field]['count']
-    data['total_firmwares'] = len(results)
-    return JsonResponse(data=data, status=HTTPStatus.OK)

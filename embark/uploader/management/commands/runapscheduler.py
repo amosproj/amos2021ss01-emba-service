@@ -19,6 +19,7 @@ logger = logging.getLogger("web")
 CPU_UPPER_BOUND = 90
 MEMORY_UPPER_BOUND = 80
 
+
 def resource_tracker():
     """
     This job tracks the current cpu and memory usage and stores Timestamp objects
@@ -84,10 +85,10 @@ class Command(BaseCommand):
         # configure CronTrigger
         if options['test']:
             # Every hour
-            resource_tracker_trigger = CronTrigger(second="00")
+            resource_tracker_trigger = CronTrigger(second="*/1")
             # everyday at midnight
-            delete_old_job_executions_tigger = CronTrigger(hour="00", minute="00", second="00")
-            delete_old_than = 60
+            delete_old_job_executions_tigger = CronTrigger(minute="*/3")
+            delete_old_than = 180
         else:
             # Every hour
             resource_tracker_trigger = CronTrigger(minute="00")
@@ -103,7 +104,7 @@ class Command(BaseCommand):
             max_instances=1,
             replace_existing=True,
         )
-        logger.info(f"Added job {resource_tracker.__name__}.")
+        logger.info(f"Added job '{resource_tracker.__name__}'.")
 
         # start cleanup jobresource_tracker
         scheduler.add_job(
