@@ -339,3 +339,58 @@ def get_load(request):
     except ResourceTimestamp.DoesNotExist:
         logger.error(f'ResourceTimestamps not found in database')
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
+
+
+@require_http_methods(["GET"])
+def get_individual_report(request):
+    firmware_id = request.GET.get('id', None)
+    if not firmware_id:
+        logger.error('Bad request for get_individual_report')
+        return JsonResponse(data={'error': 'Bad request'}, status=HTTPStatus.BAD_REQUEST)
+    try:
+        result = Result.objects.get(firmware_id=int(firmware_id))
+        return JsonResponse(data=model_to_dict(result), status=HTTPStatus.OK)
+    except Result.DoesNotExist:
+        logger.error(f'Report for firmware_id: {firmware_id} not found in database')
+        return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
+
+
+
+@require_http_methods(["GET"])
+def get_accumulated_reports():
+    """
+    Sends accumulated results for main dashboard
+    Args:
+        request:
+    Returns:
+        data = {
+            'architecture_verified': {'arch_1': count, ....},
+            'os_verified': {'os_1': count, .....},
+            'all int fields in Result Model': count
+        }
+    """
+    results = Result.objects.all()
+    charfields = ['architecture_verified', 'os_verified']
+    data = {}
+    for result in results:
+        result = model_to_dict(result)
+        result.pop('firmware_id', None)
+        for charfield in charfields:
+            if charfield not in data:
+                data[charfield] = {}
+
+            value = result.pop(charfield)
+            if value not in data[charfield]:
+                data[charfield][value] = 0
+            data[charfield][value] += 1
+        for field in result:
+            if field not in data:
+                data[field] = {'sum': 0, 'count': 0}
+            data[field]['count'] += 1
+            data[field]['sum'] += result[field]
+
+    for field in data:
+        if field not in charfields:
+            data[field]['mean'] = data[field]['sum']/data[field]['count']
+    data['total_firmwares'] = len(results)
+    return JsonResponse(data=data, status=HTTPStatus.OK)

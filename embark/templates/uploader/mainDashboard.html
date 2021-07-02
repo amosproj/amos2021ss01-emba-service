@@ -41,6 +41,28 @@
     </div>
 </div>
 
+<div class="dataCard">
+    <div class="row dataCardRow">
+        <div class="card card-left">
+            {% comment %} <canvas class="aggregatedReport" id="accumulatedCvePie"></canvas> {% endcomment %}
+        </div>
+        <div class="card card-right">
+            {% comment %}
+            <label for="accumulatedEntropy">Average Entropy Value:</label>
+            <meter id="accumulatedEntropy"
+                   min="0" max="8"
+                   value="0">
+            </meter>
+            {% endcomment %}
+        </div>
+    </div>
+    <div class="dataCardRow-bottom">
+        <div class="card card-bottom">
+            {% comment %} <canvas class="aggregatedReport" id="accumulatedDonut"></canvas> {% endcomment %}
+        </div>
+    </div>
+</div>
+
 {% load static %}
 <script type="text/javascript" src="{% static 'scripts/mainDashboard.js' %}"></script>
 {% endblock %}
