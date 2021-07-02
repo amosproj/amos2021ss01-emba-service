@@ -1,34 +1,21 @@
-from http import HTTPStatus
+from django.conf import settings
 
 from django import forms
-from django.conf import settings
+from django.forms import model_to_dict
 
-import logging
 import os
 import time
-from http import HTTPStatus
-from os import path
-import json
 import logging
-
-from django.conf import settings
-from django.forms import model_to_dict
+from http import HTTPStatus
 
 from django.shortcuts import render
 from django.template.loader import get_template
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 
-from .archiver import Archiver
-
-from django.http import StreamingHttpResponse
 from django.template import loader
-
-# TODO: Add required headers like type of requests allowed later.
-# home page test view TODO: change name accordingly
-from embark.logreader import LogReader
 
 from uploader.boundedExecutor import BoundedExecutor
 from uploader.archiver import Archiver
