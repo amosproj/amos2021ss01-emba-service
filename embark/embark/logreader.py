@@ -62,6 +62,7 @@ class LogReader:
             percentage = self.module_count / 123
         else:
             percentage = self.module_count / 35
+
         self.status_msg["module"] = stream_item_list[0]
         self.status_msg["percentage"] = percentage
 
@@ -71,16 +72,22 @@ class LogReader:
         # append it to the data structure
         global process_map
         if self.firmware_id > 0:
-            process_map[self.firmware_id_str].append(tmp_mes)
+            found = False
+            for mes in process_map[self.firmware_id_str]:
+                if mes["phase"] == tmp_mes["phase"] and mes["module"] == tmp_mes["module"]:
+                    found = True
 
-        # send it to room group
-        if self.firmware_id > 0:
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {
-                    "type": 'send.message',
-                    "message": process_map
-                }
-            )
+            if not found:
+                process_map[self.firmware_id_str].append(tmp_mes)
+
+                # send it to room group
+                if self.firmware_id > 0:
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name, {
+                            "type": 'send.message',
+                            "message": process_map
+                        }
+                    )
 
     # update dictionary with phase changes
     def update_phase(self, stream_item_list):
@@ -88,20 +95,26 @@ class LogReader:
 
         # get copy of the current status message
         tmp_mes = copy.deepcopy(self.status_msg)
-        # append it to the data structure
 
+        # append it to the data structure
         global process_map
         if self.firmware_id > 0:
-            process_map[self.firmware_id_str].append(tmp_mes)
+            found = False
+            for mes in process_map[self.firmware_id_str]:
+                if mes["phase"] == tmp_mes["phase"] and mes["module"] == tmp_mes["module"]:
+                    found = True
 
-        # send it to room group
-        if self.firmware_id > 0:
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {
-                    'type': 'send.message',
-                    'message': process_map
-                }
-            )
+            if not found:
+                process_map[self.firmware_id_str].append(tmp_mes)
+
+                # send it to room group
+                if self.firmware_id > 0:
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name, {
+                            'type': 'send.message',
+                            'message': process_map
+                        }
+                    )
 
     def read_loop(self):
 
