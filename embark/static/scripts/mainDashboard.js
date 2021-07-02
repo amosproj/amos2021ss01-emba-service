@@ -242,7 +242,13 @@ get_accumulated_reports().then(function (returndata) {
             });
 
 
+    let architectureBarChart = new Chart(accumulatedArchitecture, {
+        type: 'bar'
+    }),
 
+    let osBarChart = new Chart(accumulatedOs, {
+        type: 'bar'
+    }),
 
 
 
