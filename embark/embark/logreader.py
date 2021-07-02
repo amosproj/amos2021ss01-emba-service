@@ -1,5 +1,6 @@
 import copy
 import difflib
+import pathlib
 import re
 import time
 
@@ -133,7 +134,8 @@ class LogReader:
 
             # if file does not exist create it otherwise delete its content
             pat = f"/app/emba/{settings.LOG_ROOT}/emba_new_{self.firmware_id}.log"
-            open(pat, 'w+')
+            if not pathlib.Path(pat).exists():
+                open(pat, 'w+')
 
             # create an entry for the id in the process map
             global process_map
