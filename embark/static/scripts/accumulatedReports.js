@@ -2,8 +2,8 @@ var accumulatedDonut = document.getElementById('accumulatedDonut').getContext('2
 var accumulatedCvePie = document.getElementById('accumulatedCvePie').getContext('2d');
 var accumulatedEntropy = document.getElementById('accumulatedEntropy');
 
-//let accumulatedArchitecture = document.getElementById('accumulatedArchitecture').getContext('2d');
-//let accumulatedOs = document.getElementById('accumulatedOs').getContext('2d');
+let accumulatedArchitecture = document.getElementById('accumulatedArchitecture').getContext('2d');
+let accumulatedOs = document.getElementById('accumulatedOs').getContext('2d');
 
 
 get_accumulated_reports().then(function (returnData) {
@@ -126,13 +126,29 @@ get_accumulated_reports().then(function (returnData) {
             });
 
 
-//    let architectureBarChart = new Chart(accumulatedArchitecture, {
-//        type: 'bar'
-//    });
-//
-//    let osBarChart = new Chart(accumulatedOs, {
-//        type: 'bar'
-//    });
+    let architectureBarChart = new Chart(accumulatedArchitecture, {
+        type: 'bar',
+        data: {
+                  labels: Object.keys(returnData.architecture_verified),
+                  datasets: [{
+                    label: 'Architecture Distribution',
+                    data: Object.values(returnData.architecture_verified),
+                    borderWidth: 1
+                  }]
+            }
+    });
+
+    let osBarChart = new Chart(accumulatedOs, {
+        type: 'bar',
+        data: {
+                  labels: Object.keys(returnData.os_verified),
+                  datasets: [{
+                    label: 'Architecture Distribution',
+                    data: Object.values(returnData.os_verified),
+                    borderWidth: 1
+                  }]
+            }
+    });
 
 });
 
@@ -152,7 +168,9 @@ function get_accumulated_reports() {
             cve_high: data.cve_high,
             cve_medium: data.cve_medium,
             cve_low: data.cve_low,
-            entropy_value: data.entropy_value
+            entropy_value: data.entropy_value,
+            architecture_verified: data.architecture_verified,
+            os_verified: data.os_verified
         }
     })
 }
