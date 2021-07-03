@@ -3,7 +3,7 @@
     width: 100%;
     padding: 10px 10px 0 10px;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     grid-gap: 20px;
     height: 125px !important;
 }

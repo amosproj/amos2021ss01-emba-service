@@ -5,11 +5,12 @@ var accumulatedEntropy = document.getElementById('accumulatedEntropy');
 var accumulatedArchitecture = document.getElementById('accumulatedArchitecture').getContext('2d');
 var accumulatedOs = document.getElementById('accumulatedOs').getContext('2d');
 
-    var firmwareAnalysed = document.getElementById('firmwareAnalysed')
-    var totalFiles = document.getElementById('totalFiles')
-    var totalDirectories = document.getElementById('totalDirectories')
-    var totalBinaries = document.getElementById('totalBinaries')
-    var totalCve= document.getElementById('totalCve')
+var firmwareAnalysed = document.getElementById('firmwareAnalysed');
+var totalFiles = document.getElementById('totalFiles');
+var totalDirectories = document.getElementById('totalDirectories');
+var totalBinaries = document.getElementById('totalBinaries');
+var totalCve= document.getElementById('totalCve');
+var totalIssues = document.getElementById('totalIssues')
 
 
 
@@ -33,6 +34,7 @@ get_accumulated_reports().then(function (returnData) {
     totalDirectories.textContent = returnData.directories['sum'];
     totalBinaries.textContent = returnData.bins_checked['sum'];
     totalCve.textContent = returnData.cve_medium['sum'] + returnData.cve_low['sum'] + returnData.cve_high['sum'];
+    totalIssues.textContent = returnData.exploits['sum'];
 
     let cvePieChart = new Chart(accumulatedCvePie, {
         type: 'pie',
@@ -204,23 +206,7 @@ function get_accumulated_reports() {
     let url = window.location.origin + "/get_accumulated_reports/";
 
     return $.getJSON(url).then(function(data){
-        console.log(data)
-        return{
-            pie: data.pie,
-            nx: data.nx,
-            relro: data.relro,
-            stripped: data.stripped,
-            canary: data.canary,
-            bins_checked: data.bins_checked,
-            cve_high: data.cve_high,
-            cve_medium: data.cve_medium,
-            cve_low: data.cve_low,
-            entropy_value: data.entropy_value,
-            architecture_verified: data.architecture_verified,
-            os_verified: data.os_verified,
-            total_firmwares: data.total_firmwares,
-            files: data.files,
-            directories: data.directories
-        }
+        console.log(data);
+        return data;
     })
 }
