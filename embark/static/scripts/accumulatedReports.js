@@ -154,12 +154,41 @@ get_accumulated_reports().then(function (returnData) {
         data: {
                   labels: archLabels,
                   datasets: [{
-                    label: 'Architecture Distribution',
                     data: archCounts,
                     borderWidth: 1
                   }]
             },
-        backgroundColor: colors
+        backgroundColor: colors,
+        options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: false,
+                    text: 'Architecture Distribution',
+                    fontSize: 25
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        fontColor: '#000'
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        top: 0
+                    }
+                },
+                tooltips: {
+                              callbacks: {
+                                label: function(item, data) {
+                                console.log(data.labels, item);
+                                    return '';
+                                }
+                            }
+                }
     });
 
     var osLabels = Object.keys(returnData.os_verified);
@@ -182,7 +211,37 @@ get_accumulated_reports().then(function (returnData) {
                     borderWidth: 1
                   }]
             },
-        backgroundColor: colors_2
+        backgroundColor: colors_2,
+        options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: false,
+                    text: 'Architecture Distribution',
+                    fontSize: 25
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        fontColor: '#000'
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        top: 0
+                    }
+                },
+                tooltips: {
+                              callbacks: {
+                                label: function(item, data) {
+                                console.log(data.labels, item);
+                                    return '';
+                                }
+                            }
+                }
     });
 
 });
