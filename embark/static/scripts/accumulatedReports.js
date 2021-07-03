@@ -15,7 +15,7 @@ function getRandomColors(num) {
         colors.push(`rgb (${r}, ${g}, ${b})`)
     }
     return color;
-        }
+}
 
 
 get_accumulated_reports().then(function (returnData) {
@@ -165,7 +165,6 @@ get_accumulated_reports().then(function (returnData) {
                     borderWidth: 1
                   }]
             },
-        ,
         backgroundColor: getRandomColors(osLabels.length)
     });
 
