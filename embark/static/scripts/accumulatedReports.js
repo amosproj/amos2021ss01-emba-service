@@ -52,25 +52,6 @@ get_accumulated_reports().then(function (returnData) {
                     top: 0
                 }
             },
-            scales: {
-                x: {
-                    ticks: {
-                        display: true,
-                        autoSkip: false,
-                        maxRotation: 0,
-                        minRotation: 0,
-                        callback: function(val, index) {
-                            // Hide the label of every 2nd dataset
-                            return index % 20 === 0 ? this.getLabelForValue(val).split('T')[1].split('.')[0] : '';
-                          },
-                    }
-                },
-                y: {
-                    min: 0,
-                    max: 100,
-                    stepSize: 5
-                }
-            },
             tooltips: {
                 enabled: true
             }
