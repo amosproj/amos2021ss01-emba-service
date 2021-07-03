@@ -339,7 +339,7 @@ def get_individual_report(request):
         result = Result.objects.get(firmware_id=int(firmware_id))
         result = model_to_dict(result)
         result['strcpy_bin'] = json.loads(result['strcpy_bin'])
-        return JsonResponse(data=model_to_dict(result), status=HTTPStatus.OK)
+        return JsonResponse(data=result, status=HTTPStatus.OK)
     except Result.DoesNotExist:
         logger.error(f'Report for firmware_id: {firmware_id} not found in database')
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
