@@ -327,7 +327,7 @@ def get_load(request):
         logger.error(f'ResourceTimestamps not found in database')
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
 
-
+@csrf_exempt
 @require_http_methods(["GET"])
 def get_individual_report(request):
     firmware_id = request.GET.get('id', None)
@@ -342,9 +342,9 @@ def get_individual_report(request):
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
 
 
-
+@csrf_exempt
 @require_http_methods(["GET"])
-def get_accumulated_reports():
+def get_accumulated_reports(request):
     """
     Sends accumulated results for main dashboard
     Args:
