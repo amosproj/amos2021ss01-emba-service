@@ -3,6 +3,7 @@ from django.conf import settings
 from django import forms
 from django.forms import model_to_dict
 
+import json
 import os
 import time
 import logging
@@ -336,6 +337,8 @@ def get_individual_report(request):
         return JsonResponse(data={'error': 'Bad request'}, status=HTTPStatus.BAD_REQUEST)
     try:
         result = Result.objects.get(firmware_id=int(firmware_id))
+        result = model_to_dict(result)
+        result['strcpy_bin'] = json.loads(result['strcpy_bin'])
         return JsonResponse(data=model_to_dict(result), status=HTTPStatus.OK)
     except Result.DoesNotExist:
         logger.error(f'Report for firmware_id: {firmware_id} not found in database')
@@ -362,7 +365,8 @@ def get_accumulated_reports(request):
     data = {}
     for result in results:
         result = model_to_dict(result)
-        result.pop('firmware_id', None)
+        result.pop('firmware', None)
+        result.pop('strcpy_bin', None)
         for charfield in charfields:
             if charfield not in data:
                 data[charfield] = {}
