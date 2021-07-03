@@ -24,7 +24,7 @@ process_map = {}
 
 class LogReader:
 
-    def __init__(self, firmware_id, threaded):
+    def __init__(self, firmware_id):
 
         # global module count and status_msg directory
         self.module_count = 0
@@ -35,8 +35,9 @@ class LogReader:
         self.room_group_name = 'updatesgroup'
         self.channel_layer = get_channel_layer()
 
-        # boolean for parallel execution
-        self.threaded = threaded
+        # variables for cleanup
+        self.finish = False
+        self.wd = None
 
         # for testing
         self.test_list1 = []
@@ -58,12 +59,11 @@ class LogReader:
     def update_status(self, stream_item_list):
         # progress percentage TODO: improve percentage calculation
         self.module_count += 1
-        percentage = 0
-        if self.threaded:
-            percentage = self.module_count / 123
-        else:
-            percentage = self.module_count / 35
 
+        # calculate percentage
+        percentage = self.module_count / 34
+
+        # set attributes of current message
         self.status_msg["module"] = stream_item_list[0]
         self.status_msg["percentage"] = percentage
 
@@ -116,6 +116,8 @@ class LogReader:
                             'message': process_map
                         }
                     )
+        if "Test ended" in stream_item_list[1]:
+            self.finish = True
 
     def read_loop(self):
 
@@ -128,7 +130,8 @@ class LogReader:
 
         logger.info(f"read loop started for {self.firmware_id}")
 
-        while True:
+        while not self.finish:
+
             # get firmware for id which the BoundedExecutor gave the log_reader
             firmware = Firmware.objects.get(pk=self.firmware_id)
 
@@ -158,6 +161,18 @@ class LogReader:
                         self.input_processing(tmp)
                         # copy diff to tmp file
                         self.copy_file_content(tmp, firmware.path_to_logs)
+
+        self.cleanup()
+        return
+
+    def cleanup(self):
+
+        """
+            Called when logreader should be cleaned up
+        """
+        # inotify = INotify()
+        # inotify.rm_watch(self.wd)
+        logger.info(f"Log reader cleaned up for {self.firmware_id}")
 
     def process_line(self, inp, pat):
 

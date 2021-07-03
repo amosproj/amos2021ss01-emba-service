@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import re
 
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from threading import BoundedSemaphore
 
@@ -63,11 +64,13 @@ class BoundedExecutor:
             # success
             logger.info(f"Success: {cmd}")
 
+            # get csv log location
             csv_log_location = f"/app/emba/{settings.LOG_ROOT}/{primary_key}/f50_base_aggregator.csv"
 
             # read f50_aggregator and store it into a Result form
             logger.info(f'Reading report from:')
-            cls.csv_read(primary_key, csv_log_location)
+            if Path(csv_log_location).exists:
+                cls.csv_read(primary_key, csv_log_location)
 
             # take care of cleanup
             if active_analyzer_dir:
@@ -159,10 +162,7 @@ class BoundedExecutor:
         emba_fut = BoundedExecutor.submit(cls.run_emba_cmd, emba_cmd, firmware_flags.pk, active_analyzer_dir)
 
         # start log_reader TODO: cancel future and return future
-        threaded = False
-        if '-t' in emba_cmd:
-            threaded = True
-        log_read_fut = BoundedExecutor.submit(LogReader, firmware_flags.pk, threaded)
+        log_read_fut = BoundedExecutor.submit(LogReader, firmware_flags.pk)
 
         return emba_fut
 
