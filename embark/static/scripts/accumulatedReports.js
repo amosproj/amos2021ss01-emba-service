@@ -1,14 +1,14 @@
 var accumulatedDonut = document.getElementById('accumulatedDonut').getContext('2d');
 var accumulatedCvePie = document.getElementById('accumulatedCvePie').getContext('2d');
-var accumulatedEntropy = document.getElementById('accumulatedEntropy').getContext('2d');
+var accumulatedEntropy = document.getElementById('accumulatedEntropy');
 
 //let accumulatedArchitecture = document.getElementById('accumulatedArchitecture').getContext('2d');
 //let accumulatedOs = document.getElementById('accumulatedOs').getContext('2d');
 
 
-get_accumulated_reports().then(function (returndata) {
+get_accumulated_reports().then(function (returnData) {
 
-    accumulatedEntropy.setAttribute(value, returnData.entropy_value.mean);
+    accumulatedEntropy.setAttribute('value', returnData.entropy_value['mean']);
 
     let cvePieChart = new Chart(accumulatedCvePie, {
         type: 'pie',
