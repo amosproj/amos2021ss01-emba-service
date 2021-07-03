@@ -357,6 +357,7 @@ def get_accumulated_reports(request):
         }
     """
     results = Result.objects.all()
+    top_5_entropies = results.order_by('-entropy_value')[:5]
     charfields = ['architecture_verified', 'os_verified']
     data = {}
     for result in results:
@@ -380,4 +381,5 @@ def get_accumulated_reports(request):
         if field not in charfields:
             data[field]['mean'] = data[field]['sum']/data[field]['count']
     data['total_firmwares'] = len(results)
+    data['top_entropies'] = [{'name': r.firmware.firmware.file, 'entropy_value': r.entropy_value} for r in top_5_entropies]
     return JsonResponse(data=data, status=HTTPStatus.OK)
