@@ -3,6 +3,7 @@ from django.conf import settings
 from django import forms
 from django.forms import model_to_dict
 
+import json
 import os
 import time
 import logging
@@ -327,6 +328,7 @@ def get_load(request):
         logger.error(f'ResourceTimestamps not found in database')
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
 
+
 @csrf_exempt
 @require_http_methods(["GET"])
 def get_individual_report(request):
@@ -336,7 +338,9 @@ def get_individual_report(request):
         return JsonResponse(data={'error': 'Bad request'}, status=HTTPStatus.BAD_REQUEST)
     try:
         result = Result.objects.get(firmware_id=int(firmware_id))
-        return JsonResponse(data=model_to_dict(result), status=HTTPStatus.OK)
+        result = model_to_dict(result)
+        result['strcpy_bin'] = json.loads(result['strcpy_bin'])
+        return JsonResponse(data=result, status=HTTPStatus.OK)
     except Result.DoesNotExist:
         logger.error(f'Report for firmware_id: {firmware_id} not found in database')
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
@@ -357,11 +361,13 @@ def get_accumulated_reports(request):
         }
     """
     results = Result.objects.all()
+    top_5_entropies = results.order_by('-entropy_value')[:5]
     charfields = ['architecture_verified', 'os_verified']
     data = {}
     for result in results:
         result = model_to_dict(result)
-        result.pop('firmware_id', None)
+        result.pop('firmware', None)
+        result.pop('strcpy_bin', None)
         for charfield in charfields:
             if charfield not in data:
                 data[charfield] = {}
@@ -380,4 +386,6 @@ def get_accumulated_reports(request):
         if field not in charfields:
             data[field]['mean'] = data[field]['sum']/data[field]['count']
     data['total_firmwares'] = len(results)
+    data['top_entropies'] = [{'name': r.firmware.firmware.file.name, 'entropy_value': r.entropy_value} for r in
+                             top_5_entropies]
     return JsonResponse(data=data, status=HTTPStatus.OK)
