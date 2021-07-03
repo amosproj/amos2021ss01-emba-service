@@ -6,6 +6,18 @@ let accumulatedArchitecture = document.getElementById('accumulatedArchitecture')
 let accumulatedOs = document.getElementById('accumulatedOs').getContext('2d');
 
 
+function getRandomColors(num) {
+    var r = Math.round (Math.random () * 255);
+    var g = Math.round (Math.random () * 255);
+    var b = Math.round (Math.random () * 255);
+    var colors = [];
+    for (var i = 0; i < num; i++ ) {
+        colors.push(`rgb (${r}, ${g}, ${b})`;)
+    }
+    return color;
+        }
+
+
 get_accumulated_reports().then(function (returnData) {
 
     accumulatedEntropy.setAttribute('value', returnData.entropy_value['mean']);
@@ -125,29 +137,36 @@ get_accumulated_reports().then(function (returnData) {
             }
             });
 
+    var archLabels = Object.keys(returnData.architecture_verified);
+    var archCounts = Object.values(returnData.architecture_verified);
 
     let architectureBarChart = new Chart(accumulatedArchitecture, {
         type: 'bar',
         data: {
-                  labels: Object.keys(returnData.architecture_verified),
+                  labels: archLabels,
                   datasets: [{
                     label: 'Architecture Distribution',
-                    data: Object.values(returnData.architecture_verified),
+                    data: archCounts,
                     borderWidth: 1
                   }]
-            }
+            },
+        backgroundColor: getRandomColors(archLabels.length)
     });
 
+    var osLabels = Object.keys(returnData.os_verified);
+    var osCounts = Object.values(returnData.os_verified);
     let osBarChart = new Chart(accumulatedOs, {
         type: 'bar',
         data: {
-                  labels: Object.keys(returnData.os_verified),
+                  labels: osLabels,
                   datasets: [{
-                    label: 'Architecture Distribution',
-                    data: Object.values(returnData.os_verified),
+                    label: 'OS Distribution',
+                    data: osCounts,
                     borderWidth: 1
                   }]
-            }
+            },
+        ,
+        backgroundColor: getRandomColors(osLabels.length)
     });
 
 });
