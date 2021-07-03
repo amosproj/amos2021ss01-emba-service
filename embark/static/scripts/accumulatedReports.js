@@ -12,7 +12,7 @@ function getRandomColors(num) {
     var b = Math.round (Math.random () * 255);
     var colors = [];
     for (var i = 0; i < num; i++ ) {
-        colors.push(`rgb (${r}, ${g}, ${b})`;)
+        colors.push(`rgb (${r}, ${g}, ${b})`)
     }
     return color;
         }
