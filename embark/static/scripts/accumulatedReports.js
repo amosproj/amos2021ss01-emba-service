@@ -137,9 +137,18 @@ get_accumulated_reports().then(function (returnData) {
             }
             });
 
+
+
     var archLabels = Object.keys(returnData.architecture_verified);
     var archCounts = Object.values(returnData.architecture_verified);
 
+    var colors = [];
+    for (var i = 0; i < archLabels.length; i++ ) {
+        var r = Math.round (Math.random () * 255);
+        var g = Math.round (Math.random () * 255);
+        var b = Math.round (Math.random () * 255);
+        colors.push(`rgb (${r}, ${g}, ${b})`)
+    }
     let architectureBarChart = new Chart(accumulatedArchitecture, {
         type: 'bar',
         data: {
@@ -150,11 +159,19 @@ get_accumulated_reports().then(function (returnData) {
                     borderWidth: 1
                   }]
             },
-        backgroundColor: getRandomColors(archLabels.length)
+        backgroundColor: colors
     });
 
     var osLabels = Object.keys(returnData.os_verified);
     var osCounts = Object.values(returnData.os_verified);
+
+    var colors_2 = [];
+    for (var i = 0; i < archLabels.length; i++ ) {
+        var r = Math.round (Math.random () * 255);
+        var g = Math.round (Math.random () * 255);
+        var b = Math.round (Math.random () * 255);
+        colors_2.push(`rgb (${r}, ${g}, ${b})`)
+    }
     let osBarChart = new Chart(accumulatedOs, {
         type: 'bar',
         data: {
@@ -165,7 +182,7 @@ get_accumulated_reports().then(function (returnData) {
                     borderWidth: 1
                   }]
             },
-        backgroundColor: getRandomColors(osLabels.length)
+        backgroundColor: colors_2
     });
 
 });
