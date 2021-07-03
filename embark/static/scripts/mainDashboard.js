@@ -93,27 +93,6 @@ function get_load() {
 }
 
 
-function get_accumulated_reports() {
-    let url = window.location.origin + "/get_accumulated_reports/";
-
-    return $.getJSON(url).then(function(data){
-        console.log(data)
-        return{
-            pie: data.pie,
-            nx: data.nx,
-            relro: data.relro,
-            stripped: data.stripped,
-            canary: data.canary,
-            bins_checked: data.bins_checked,
-            cve_high: data.cve_high,
-            cve_medium: data.cve_medium,
-            cve_low: data.cve_low,
-            entropy_value: data.entropy_value
-        }
-    })
-}
-
-
 let accumulatedDonut = document.getElementById('accumulatedDonut').getContext('2d');
 let accumulatedCvePie = document.getElementById('accumulatedCvePie').getContext('2d');
 let accumulatedEntropy = document.getElementById('accumulatedEntropy').getContext('2d');
@@ -250,8 +229,25 @@ get_accumulated_reports().then(function (returndata) {
         type: 'bar'
     }),
 
-
-
-
-
 });
+
+
+function get_accumulated_reports() {
+    let url = window.location.origin + "/get_accumulated_reports/";
+
+    return $.getJSON(url).then(function(data){
+        console.log(data)
+        return{
+            pie: data.pie,
+            nx: data.nx,
+            relro: data.relro,
+            stripped: data.stripped,
+            canary: data.canary,
+            bins_checked: data.bins_checked,
+            cve_high: data.cve_high,
+            cve_medium: data.cve_medium,
+            cve_low: data.cve_low,
+            entropy_value: data.entropy_value
+        }
+    })
+}
