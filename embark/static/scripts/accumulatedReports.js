@@ -92,33 +92,37 @@ get_accumulated_reports().then(function (returnData) {
                     ],
                 },
 
-                options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            title: {
-                display: false,
-                text: 'Binary Protections',
-                fontSize: 25
-            },
-            legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                    fontColor: '#000'
-                }
-            },
-            layout: {
-                padding: {
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    top: 0
-                }
-            },
-            tooltips: {
-                enabled: true
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: false,
+                    text: 'Binary Protections',
+                    fontSize: 25
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        fontColor: '#000'
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        top: 0
+                    }
+                },
+                tooltips: {
+                              callbacks: {
+                                label: function(item, data) {
+                                console.log(data.labels, item);
+                                    return data.datasets[item.datasetIndex].label;
+                                }
+                            }
+                        }
             }
-        }
             });
 
 
