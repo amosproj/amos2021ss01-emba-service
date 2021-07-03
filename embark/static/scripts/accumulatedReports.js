@@ -66,27 +66,27 @@ get_accumulated_reports().then(function (returnData) {
                     datasets: [
                         {
                             labels: ['binaries with NX', 'binaries without NX'],
-                            data: [resultdata.nx['mean'], (resultdata.bins_checked['mean'] - resultdata.nx['mean'])],
+                            data: [returnData.nx['mean'], (returnData.bins_checked['mean'] - returnData.nx['mean'])],
                             backgroundColor: ['#493791', '#291771'],
                         },
                         {
                             label: 'PIE',
-                            data: [resultdata.pie['mean'], (resultdata.bins_checked['mean'] - resultdata.pie['mean'])],
+                            data: [returnData.pie['mean'], (returnData.bins_checked['mean'] - returnData.pie['mean'])],
                             backgroundColor: ['#1b1534', '#000014'],
                         },
                         {
                             label: 'RELRO',
-                            data: [resultdata.relro['mean'], (resultdata.bins_checked['mean'] - resultdata.relro['mean'])],
+                            data: [returnData.relro['mean'], (returnData.bins_checked['mean'] - returnData.relro['mean'])],
                             backgroundColor: ['#7b919d', '#5b717d'],
                         },
                         {
                             label: 'CANARY',
-                            data: [resultdata.canary['mean'], (resultdata.bins_checked['mean'] - resultdata.canary['mean'])],
+                            data: [returnData.canary['mean'], (returnData.bins_checked['mean'] - returnData.canary['mean'])],
                             backgroundColor: ['#525d63', '#323d43'],
                         },
                         {
                             label: 'Stripped',
-                            data: [resultdata.stripped['mean'], (resultdata.bins_checked['mean'] - resultdata.stripped['mean'])],
+                            data: [returnData.stripped['mean'], (returnData.bins_checked['mean'] - returnData.stripped['mean'])],
                             backgroundColor: ['#009999', '#005050'],
                         },
                     ],
