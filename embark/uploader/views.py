@@ -328,6 +328,7 @@ def get_load(request):
         logger.error(f'ResourceTimestamps not found in database')
         return JsonResponse(data={'error': 'Not Found'}, status=HTTPStatus.NOT_FOUND)
 
+
 @csrf_exempt
 @require_http_methods(["GET"])
 def get_individual_report(request):
