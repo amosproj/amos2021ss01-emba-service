@@ -30,27 +30,15 @@
 <div class="dataCard">
     <div class="row dataCardRow">
         <div class="card card-left">
-            {% comment %} <canvas class="system-overload" id="loadChart"></canvas> {% endcomment %}
-        </div>
-        <div class="card card-right">
-        <!-- here goes the right side data-->
-        <!--Top 5 stropy binaries-->
-        </div>
-    </div>
-    <div class="dataCardRow-bottom">
-        <div class="card card-bottom">
-        <!--System overload details over last 24hr/week/month-->
-        <canvas class="system-overload" id="loadChart"></canvas>
-        </div>
-    </div>
-</div>
-
-<div class="dataCard">
-    <div class="row dataCardRow">
-        <div class="card card-left">
             <canvas class="aggregatedReport" id="accumulatedCvePie"></canvas>
         </div>
         <div class="card card-right">
+            <canvas class="aggregatedReport" id="accumulatedDonut"></canvas>
+        </div>
+
+    </div>
+    <div class="dataCardRow-bottom">
+        <div class="card card-bottom">
             <label for="accumulatedEntropy">Average Entropy Value:</label>
             <meter id="accumulatedEntropy"
                    min="0" max="8"
@@ -58,9 +46,12 @@
             </meter>
         </div>
     </div>
-    <div class="dataCardRow-bottom">
+</div>
+
+<div class="dataCard">
+    <div class="row dataCardRow">
         <div class="card card-bottom">
-            <canvas class="aggregatedReport" id="accumulatedDonut"></canvas>
+            <canvas class="system-overload" id="loadChart"></canvas>
         </div>
     </div>
 </div>
