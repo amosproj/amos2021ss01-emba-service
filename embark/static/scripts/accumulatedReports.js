@@ -14,7 +14,7 @@ function getRandomColors(num) {
     for (var i = 0; i < num; i++ ) {
         colors.push(`rgb (${r}, ${g}, ${b})`)
     }
-    return color;
+    return colors;
 }
 
 
