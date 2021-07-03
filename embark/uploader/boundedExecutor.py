@@ -4,6 +4,7 @@ import os
 import shutil
 import subprocess
 import re
+import json
 
 from concurrent.futures import ThreadPoolExecutor
 from threading import BoundedSemaphore
@@ -254,7 +255,7 @@ class BoundedExecutor:
             stripped_per=int(res_dict.get("stripped_per", 0)),
             bins_checked=int(res_dict.get("bins_checked", 0)),
             strcpy=int(res_dict.get("strcpy", 0)),
-            # strcpy_bin=int(res_dict.get("strcpy_bin", 0)),
+            strcpy_bin=json.dumps(res_dict.get("strcpy_bin", {})),
             versions_identified=int(res_dict.get("versions_identified", 0)),
             cve_high=int(res_dict.get("cve_high", 0)),
             cve_medium=int(res_dict.get("cve_medium", 0)),
