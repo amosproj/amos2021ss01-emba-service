@@ -1,83 +1,83 @@
-//let loadChart = document.getElementById('loadChart').getContext('2d');
-//
-//get_load().then(function (returndata) {
-//
-//    let lineChart = new Chart(loadChart, {
-//        type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
-//        data: {
-//            labels: returndata.time,
-//            datasets: [{
-//                    label: 'CPU',
-//                    data: returndata.cpu,
-//                    borderColor: 'rgba(255, 127, 64, 1)',
-//                    backgroundColor: 'rgba(255, 127, 64, 0.2)',
-//                    borderWidth: 2,
-//                    hoverBorderWidth: 8,
-//                    hoverBorderColor: 'rgba(255, 127, 64, 1)',
-//                    fill: true,
-//                    cubicInterpolationMode: 'monotone'
-//                },
-//                {
-//                    label: 'MEM',
-//                    data: returndata.mem,
-//                    borderColor: 'rgba(64,127,255,1)',
-//                    backgroundColor: 'rgba(64,127,255, 0.2)',
-//                    borderWidth: 2,
-//                    hoverBorderWidth: 8,
-//                    hoverBorderColor: 'rgba(64,127,255,1)',
-//                    fill: true,
-//                    cubicInterpolationMode: 'monotone'
-//                }
-//            ]
-//        },
-//        options: {
-//            responsive: true,
-//            maintainAspectRatio: false,
-//            title: {
-//                display: false,
-//                text: 'CPU / Memory utilization percentage',
-//                fontSize: 25
-//            },
-//            legend: {
-//                display: false,
-//                position: 'right',
-//                labels: {
-//                    fontColor: '#000'
-//                }
-//            },
-//            layout: {
-//                padding: {
-//                    left: 0,
-//                    right: 0,
-//                    bottom: 0,
-//                    top: 0
-//                }
-//            },
-//            scales: {
-//                x: {
-//                    ticks: {
-//                        display: true,
-//                        autoSkip: false,
-//                        maxRotation: 0,
-//                        minRotation: 0,
-//                        callback: function(val, index) {
-//                            // Hide the label of every 2nd dataset
-//                            return index % 20 === 0 ? this.getLabelForValue(val).split('T')[1].split('.')[0] : '';
-//                          },
-//                    }
-//                },
-//                y: {
-//                    min: 0,
-//                    max: 100,
-//                    stepSize: 5
-//                }
-//            },
-//            tooltips: {
-//                enabled: true
-//            }
-//        }
-//    });
-//});
+let loadChart = document.getElementById('loadChart').getContext('2d');
+
+get_load().then(function (returndata) {
+
+    let lineChart = new Chart(loadChart, {
+        type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+        data: {
+            labels: returndata.time,
+            datasets: [{
+                    label: 'CPU',
+                    data: returndata.cpu,
+                    borderColor: 'rgba(255, 127, 64, 1)',
+                    backgroundColor: 'rgba(255, 127, 64, 0.2)',
+                    borderWidth: 2,
+                    hoverBorderWidth: 8,
+                    hoverBorderColor: 'rgba(255, 127, 64, 1)',
+                    fill: true,
+                    cubicInterpolationMode: 'monotone'
+                },
+                {
+                    label: 'MEM',
+                    data: returndata.mem,
+                    borderColor: 'rgba(64,127,255,1)',
+                    backgroundColor: 'rgba(64,127,255, 0.2)',
+                    borderWidth: 2,
+                    hoverBorderWidth: 8,
+                    hoverBorderColor: 'rgba(64,127,255,1)',
+                    fill: true,
+                    cubicInterpolationMode: 'monotone'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            title: {
+                display: false,
+                text: 'CPU / Memory utilization percentage',
+                fontSize: 25
+            },
+            legend: {
+                display: false,
+                position: 'right',
+                labels: {
+                    fontColor: '#000'
+                }
+            },
+            layout: {
+                padding: {
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    top: 0
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        display: true,
+                        autoSkip: false,
+                        maxRotation: 0,
+                        minRotation: 0,
+                        callback: function(val, index) {
+                            // Hide the label of every 2nd dataset
+                            return index % 20 === 0 ? this.getLabelForValue(val).split('T')[1].split('.')[0] : '';
+                          },
+                    }
+                },
+                y: {
+                    min: 0,
+                    max: 100,
+                    stepSize: 5
+                }
+            },
+            tooltips: {
+                enabled: true
+            }
+        }
+    });
+});
 
 function get_load() {
     let url = window.location.origin + "/get_load/";
@@ -93,12 +93,12 @@ function get_load() {
 }
 
 
-let accumulatedDonut = document.getElementById('accumulatedDonut').getContext('2d');
-let accumulatedCvePie = document.getElementById('accumulatedCvePie').getContext('2d');
-let accumulatedEntropy = document.getElementById('accumulatedEntropy').getContext('2d');
+var accumulatedDonut = document.getElementById('accumulatedDonut').getContext('2d');
+var accumulatedCvePie = document.getElementById('accumulatedCvePie').getContext('2d');
+var accumulatedEntropy = document.getElementById('accumulatedEntropy').getContext('2d');
 
-let accumulatedArchitecture = document.getElementById('accumulatedArchitecture').getContext('2d');
-let accumulatedOs = document.getElementById('accumulatedOs').getContext('2d');
+//let accumulatedArchitecture = document.getElementById('accumulatedArchitecture').getContext('2d');
+//let accumulatedOs = document.getElementById('accumulatedOs').getContext('2d');
 
 
 get_accumulated_reports().then(function (returndata) {
@@ -221,13 +221,13 @@ get_accumulated_reports().then(function (returndata) {
             });
 
 
-    let architectureBarChart = new Chart(accumulatedArchitecture, {
-        type: 'bar'
-    });
-
-    let osBarChart = new Chart(accumulatedOs, {
-        type: 'bar'
-    });
+//    let architectureBarChart = new Chart(accumulatedArchitecture, {
+//        type: 'bar'
+//    });
+//
+//    let osBarChart = new Chart(accumulatedOs, {
+//        type: 'bar'
+//    });
 
 });
 
