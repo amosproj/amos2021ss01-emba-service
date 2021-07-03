@@ -2,8 +2,20 @@ var accumulatedDonut = document.getElementById('accumulatedDonut').getContext('2
 var accumulatedCvePie = document.getElementById('accumulatedCvePie').getContext('2d');
 var accumulatedEntropy = document.getElementById('accumulatedEntropy');
 
-//let accumulatedArchitecture = document.getElementById('accumulatedArchitecture').getContext('2d');
-//let accumulatedOs = document.getElementById('accumulatedOs').getContext('2d');
+let accumulatedArchitecture = document.getElementById('accumulatedArchitecture').getContext('2d');
+let accumulatedOs = document.getElementById('accumulatedOs').getContext('2d');
+
+
+function getRandomColors(num) {
+    var r = Math.round (Math.random () * 255);
+    var g = Math.round (Math.random () * 255);
+    var b = Math.round (Math.random () * 255);
+    var colors = [];
+    for (var i = 0; i < num; i++ ) {
+        colors.push(`rgb (${r}, ${g}, ${b})`)
+    }
+    return colors;
+}
 
 
 get_accumulated_reports().then(function (returnData) {
@@ -126,13 +138,52 @@ get_accumulated_reports().then(function (returnData) {
             });
 
 
-//    let architectureBarChart = new Chart(accumulatedArchitecture, {
-//        type: 'bar'
-//    });
-//
-//    let osBarChart = new Chart(accumulatedOs, {
-//        type: 'bar'
-//    });
+
+    var archLabels = Object.keys(returnData.architecture_verified);
+    var archCounts = Object.values(returnData.architecture_verified);
+
+    var colors = [];
+    for (var i = 0; i < archLabels.length; i++ ) {
+        var r = Math.round (Math.random () * 255);
+        var g = Math.round (Math.random () * 255);
+        var b = Math.round (Math.random () * 255);
+        colors.push(`rgb (${r}, ${g}, ${b})`)
+    }
+    let architectureBarChart = new Chart(accumulatedArchitecture, {
+        type: 'bar',
+        data: {
+                  labels: archLabels,
+                  datasets: [{
+                    label: 'Architecture Distribution',
+                    data: archCounts,
+                    borderWidth: 1
+                  }]
+            },
+        backgroundColor: colors
+    });
+
+    var osLabels = Object.keys(returnData.os_verified);
+    var osCounts = Object.values(returnData.os_verified);
+
+    var colors_2 = [];
+    for (var i = 0; i < archLabels.length; i++ ) {
+        var r = Math.round (Math.random () * 255);
+        var g = Math.round (Math.random () * 255);
+        var b = Math.round (Math.random () * 255);
+        colors_2.push(`rgb (${r}, ${g}, ${b})`)
+    }
+    let osBarChart = new Chart(accumulatedOs, {
+        type: 'bar',
+        data: {
+                  labels: osLabels,
+                  datasets: [{
+                    label: 'OS Distribution',
+                    data: osCounts,
+                    borderWidth: 1
+                  }]
+            },
+        backgroundColor: colors_2
+    });
 
 });
 
@@ -152,7 +203,9 @@ function get_accumulated_reports() {
             cve_high: data.cve_high,
             cve_medium: data.cve_medium,
             cve_low: data.cve_low,
-            entropy_value: data.entropy_value
+            entropy_value: data.entropy_value,
+            architecture_verified: data.architecture_verified,
+            os_verified: data.os_verified
         }
     })
 }
