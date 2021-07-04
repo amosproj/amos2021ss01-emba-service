@@ -56,57 +56,64 @@
 
 </head>
 	<div class="container-fluid">
-		<div class="row">
-			<!--Navigation menu-->
-			<div class="col col-sm-3">
-				<div class="navigation">
-					<!--Navigation menu items-->
-					<ul>
-						<li>
-							<a class="active" href="{% url 'embark-home' %}" onclick="">
-								<span class="brandlogo"><img src="{% static 'content/images/Embark_red.png'%}" alt="embark" class="embarklogo"></span>
-								<span class="brandname"><h2>EMBArk</h2></span>
-							</a>
-						</li>
-						<li>
-							<a href="{% url 'embark-MainDashboard' %}" onclick="">
-								<span class="icon"><i class="fas fa-tachometer-alt" aria-hidden="true"></i></span>
-								<span class="title">Dashboard</span>
-							</a>
-						</li>
-						<li>
-							<a href="{% url 'embark-start-analysis' refreshed=1 %}" data-link>
-								<span class="icon"><i class="fas fa-upload" aria-hidden = "true"></i> </span>
-								<span class="title">Uploader</span>
-							</a>
-						</li>
-						<li>
-							<a href="{% url 'embark-ServiceDashboard' %}">
-								<span class="icon"><i class="fas fa-binoculars" aria-hidden="true"></i></span>
-								<span class="title">Service</span>
-							</a>
-						</li>
-						<li>
-							<a href="{% url 'embark-ReportDashboard' %}">
-								<span class="icon"><i class="fas fa-chart-pie" aria-hidden="true"></i></span>
-								<span class="title">Reports</span>
-							</a>
-						</li>
-					</ul>
+		<!--Navigation menu-->
+		<div class="navigation">
+			<!--Navigation menu items-->
+			<div class="logo-content">
+				<div class="logo">
+					<a href="{% url 'embark-home' %}" onclick="">
+						<span class="brandlogo"><img src="{% static 'content/images/Embark_red.png'%}" alt="embark" class="embarklogo"></span>
+						<span class="brandname"><h2>EMBArk</h2></span>
+					</a>
+				</div>
+				<div class="nav-toggle" onclick="navToolTip()">
+					<i class="fas fa-bars" id="menuBtn"></i>
+				</div>
+			</div>
+			<ul>
+				<li>
+					<a class="active" href="{% url 'embark-MainDashboard' %}" onclick="">
+						<span class="icon"><i class="fas fa-tachometer-alt" aria-hidden="true"></i></span>
+						<span class="nav-link">Dashboard</span>
+					</a>
+					<span class="nav-tooltip">Dashboard</span>
+				</li>
+				<li>
+					<a href="{% url 'embark-start-analysis' refreshed=1 %}" data-link>
+						<span class="icon"><i class="fas fa-upload" aria-hidden = "true"></i> </span>
+						<span class="nav-link">Uploader</span>
+					</a>
+					<span class="nav-tooltip">Uploader</span>
+				</li>
+				<li>
+					<a href="{% url 'embark-ServiceDashboard' %}">
+						<span class="icon"><i class="fas fa-binoculars" aria-hidden="true"></i></span>
+						<span class="nav-link">Service</span>
+					</a>
+					<span class="nav-tooltip">Service</span>
+				</li>
+				<li>
+					<a href="{% url 'embark-ReportDashboard' %}">
+						<span class="icon"><i class="fas fa-chart-pie" aria-hidden="true"></i></span>
+						<span class="nav-link">Reports</span>
+					</a>
+					<span class="nav-tooltip">Reports</span>
+				</li>
+			</ul>
+			<div class="profile-content">
+				<div class="profile">
+					<div class="profile-details">
+						<div class="user-image"><i class="fas fa-user-circle"></i></div>
+						<div class="user-id">test.user@gmail.com</div>
+					</div>
+					<i class="fas fa-sign-out-alt" id="log-out"></i>
 				</div>
 			</div>
 		</div>
-	</div>
-	
-	<!--Main container-->
-	<div class="main col col-sm-10">
-		{% comment %} <section class="section1" id="home">Home</section>
-		<section class="section2" id="dashboard">Dashboard</section>
-		<section class="section3" id="uploader">Uploader</section> {% endcomment %}
-		{% comment %} <section class="section4" id="details">Details</section>			 {% endcomment %}
-		{% comment %} <section class="section5" id="service">Service</section>
-		<section class="section6" id="reports">Reports</section> {% endcomment %}
-		{% block maincontent %}
-		{% endblock %}
+		<!--Main container-->
+		<div class="main col col-sm-10">
+			{% block maincontent %}
+			{% endblock %}
+		</div>
 	</div>
 </html>
