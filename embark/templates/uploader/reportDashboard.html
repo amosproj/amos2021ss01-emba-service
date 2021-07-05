@@ -27,7 +27,7 @@
                     <td>{{ firmware.start_date }}</td>
                     <td>{{ firmware.end_date }}</td>
                     <td>
-                        <p>
+                        <div class="row">
                             <form action={% url 'embark-download' firmware.pk %} method='GET'>
                                 <button type="submit" class="btn" >Download Logs</button>
                             </form>
@@ -37,7 +37,7 @@
                             <form action={% url 'embark-IndividualReportDashboard' firmware.pk %} method='GET'>
                                 <button type="submit" class="btn" >Detail View</button>
                             </form>
-                        </p>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}

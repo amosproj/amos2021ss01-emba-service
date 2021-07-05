@@ -66,7 +66,7 @@
 }
 
 canvas {
-    height: auto !important;
+    height: 250px !important;
     width: auto !important;
     margin: 5px;
 
