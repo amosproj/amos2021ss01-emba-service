@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export DJANGO_SETTINGS_MODULE=embark.settings
+pip3 install -r requirements.txt
 python3 manage.py makemigrations users uploader
 python3 manage.py migrate
 python3 manage.py runapscheduler &

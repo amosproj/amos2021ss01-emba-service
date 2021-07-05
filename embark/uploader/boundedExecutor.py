@@ -6,6 +6,7 @@ import subprocess
 import re
 import json
 
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from threading import BoundedSemaphore
 
@@ -64,11 +65,13 @@ class BoundedExecutor:
             # success
             logger.info(f"Success: {cmd}")
 
+            # get csv log location
             csv_log_location = f"/app/emba/{settings.LOG_ROOT}/{primary_key}/f50_base_aggregator.csv"
 
             # read f50_aggregator and store it into a Result form
             logger.info(f'Reading report from:')
-            cls.csv_read(primary_key, csv_log_location)
+            if Path(csv_log_location).exists:
+                cls.csv_read(primary_key, csv_log_location)
 
             # take care of cleanup
             if active_analyzer_dir:
@@ -148,7 +151,6 @@ class BoundedExecutor:
         emba_flags = firmware_flags.get_flags()
 
         # evaluate meta information and safely create log dir
-        # emba_log_location = f"/app/emba/{settings.LOG_ROOT}/{firmware_flags.id}"
         emba_log_location = f"/app/emba/{settings.LOG_ROOT}/{firmware_flags.pk}"
         log_path = Path(emba_log_location)
         log_path.mkdir(parents=True, exist_ok=True)
