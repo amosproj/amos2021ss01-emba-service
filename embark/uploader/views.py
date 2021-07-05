@@ -348,11 +348,11 @@ def get_individual_report(request, analyze_id):
         return JsonResponse(data={'error': 'Bad request'}, status=HTTPStatus.BAD_REQUEST)
     try:
         result = Result.objects.get(firmware_id=int(firmware_id))
-        firmware = Firmware.objects.get(pk=int(firmware_id))
+        firmware_object = Firmware.objects.get(pk=int(firmware_id))
 
-        return_dict = dict(model_to_dict(result), **model_to_dict(firmware))
+        return_dict = dict(model_to_dict(result), **model_to_dict(firmware_object))
 
-        return_dict['name'] = firmware.firmware.file.name
+        return_dict['name'] = firmware_object.firmware.file.name
         return_dict['strcpy_bin'] = json.loads(return_dict['strcpy_bin'])
 
         return JsonResponse(data=return_dict, status=HTTPStatus.OK)
