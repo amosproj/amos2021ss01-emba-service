@@ -189,8 +189,8 @@ get_accumulated_reports().then(function (returnData) {
                   labels: osLabels,
                   datasets: [{
                     label: 'OS Distribution',
-                    labels: archLabels,
-                    data: osLabels,
+                    labels: osLabels,
+                    data: osCounts,
                     borderWidth: 1,
                     backgroundColor: getRandomColors(osLabels.length)
                   }],
