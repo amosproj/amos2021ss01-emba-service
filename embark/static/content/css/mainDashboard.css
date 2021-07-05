@@ -10,8 +10,9 @@
 
 .card-body {
     background: #def2ff;
-    color: #0000;
+    color: #1b1534;
     text-align: center;
+    font-size: 25px;
 }
 
 .card-title {
