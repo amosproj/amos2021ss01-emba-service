@@ -1,5 +1,10 @@
-var accumulatedDonut = document.getElementById('accumulatedDonut').getContext('2d');
 var accumulatedCvePie = document.getElementById('accumulatedCvePie').getContext('2d');
+
+var nxpie = document.getElementById('nxpie').getContext('2d');
+var piepie = document.getElementById('piepie').getContext('2d');
+var relropie = document.getElementById('relropie').getContext('2d');
+var canarypie = document.getElementById('canarypie').getContext('2d');
+var strippedpie = document.getElementById('strippedpie').getContext('2d');
 
 get_individual_report().then(function (returnData) {
 
@@ -51,70 +56,16 @@ get_individual_report().then(function (returnData) {
         }
     });
 
-    let doughnutChart = new Chart(accumulatedDonut, {
-        type: 'doughnut',
-        data: {
-            datasets: [
-                {
-                    labels: ['binaries with NX', 'binaries without NX'],
-                    data: [returnData.nx, (returnData.bins_checked - returnData.nx)],
-                    backgroundColor: ['#493791', '#291771'],
-                },
-                {
-                    label: 'PIE',
-                    data: [returnData.pie, (returnData.bins_checked - returnData.pie)],
-                    backgroundColor: ['#1b1534', '#000014'],
-                },
-                {
-                    label: 'RELRO',
-                    data: [returnData.relro, (returnData.bins_checked - returnData.relro)],
-                    backgroundColor: ['#7b919d', '#5b717d'],
-                },
-                {
-                    label: 'CANARY',
-                    data: [returnData.canary, (returnData.bins_checked - returnData.canary)],
-                    backgroundColor: ['#525d63', '#323d43'],
-                },
-                {
-                    label: 'Stripped',
-                    data: [returnData.stripped, (returnData.bins_checked - returnData.stripped)],
-                    backgroundColor: ['#009999', '#005050'],
-                },
-            ],
-        },
-
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            title: {
-                display: false,
-                text: 'Binary Protections',
-                fontSize: 25
-            },
-            legend: {
-                position: 'top',
-                labels: {
-                    fontColor: '#000'
-                }
-            },
-            layout: {
-                padding: {
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    top: 0
-                }
-            },
-            tooltips: {
-                  callbacks: {
-                    label: function(item, data) {
-                    console.log(data.labels, item);
-                        return data.datasets[item.datasetIndex].label;
-                    }
-                }
-            }
-        }
-    });
+    make_chart(relropie, 'Binaries with RELRO', 'Binaries without RELRO',
+        '#493791', '#291771', returnData.bins_checked, returnData.relro, 'Binary Protections')
+    make_chart(nxpie, 'Binaries with NX','Binaries without NX',
+        '#1b1534', '#000014', returnData.bins_checked, returnData.nx, 'Binary Protections')
+    make_chart(piepie, 'Binaries with PIE', 'Binaries without PIE',
+        '#7b919d', '#5b717d', returnData.bins_checked, returnData.pie, 'Binary Protections')
+    make_chart(canarypie, 'Binaries with CANARY', 'Binaries without CANARY',
+        '#525d63', '#323d43', returnData.bins_checked, returnData.canary, 'Binary Protections')
+    make_chart(strippedpie, 'Binaries with STRIPPED', 'Binaries without STRIPPED',
+        '#009999', '#005050', returnData.bins_checked, returnData.stripped, 'Binary Protections')
 
     let data_to_display = {
         "firmware name": returnData.name,
@@ -152,6 +103,43 @@ function get_individual_report() {
     let url = window.location.origin + "/get_individual_report/" + report_index;
 
     return $.getJSON(url).then(function(data){
+
+        data.cve_high = 10
+        data.PIE = 10
+
+        data.bins_checked = 20
+
         return data
     })
+}
+
+function make_chart(html_chart, label_1, label_2, color_1, color_2, data_cmp, data_strcpy, title) {
+        let chart = new Chart(html_chart, {
+        type: 'pie',
+        data: {
+            labels: [label_1, label_2],
+            datasets: [
+                {
+                    labels: [label_1, label_2],
+                    data: [data_strcpy, (data_cmp - data_strcpy)],
+                    backgroundColor: [color_1, color_2],
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            title: {
+                display: false,
+                text: title,
+                fontSize: 25
+            },
+            legend: {
+                position: 'top',
+                labels: {
+                    fontColor: '#000'
+                }
+            },
+        }
+    });
 }

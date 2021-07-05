@@ -15,11 +15,19 @@
     margin: 10px;
     display: grid;
     grid-template-columns: 65% auto;
-     height: auto !important;
+    height: auto !important;
     gap: 10px;
 }
 
 .dataCardReport {
     height: auto !important;
     width: auto !important;
+}
+
+.dataCardRowNew {
+    margin: 10px;
+    height: 300px !important;
+    display: grid;
+    grid-template-columns: 19.5% 19.5% 19.5% 19.5% 19.5%;
+    gap: 10px;
 }
