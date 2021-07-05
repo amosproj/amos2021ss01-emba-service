@@ -134,7 +134,7 @@ get_individual_report().then(function (returnData) {
     }
 
     for (const [key, value] of Object.entries(returnData.strcpy_bin)) {
-            data_to_display[key] = value
+            data_to_display["strcpy bin: " + key] = value
     }
 
     const table = document.getElementById("detail_body");
@@ -152,15 +152,6 @@ function get_individual_report() {
     let url = window.location.origin + "/get_individual_report/" + report_index;
 
     return $.getJSON(url).then(function(data){
-        data.cve_high = 100
-        data.cve_medium = 200
-        data.cve_low = 500
-
-        data.pie = 100
-        data.nx = 200
-        data.relro = 500
-        data.canary = 200
-
         return data
     })
 }
