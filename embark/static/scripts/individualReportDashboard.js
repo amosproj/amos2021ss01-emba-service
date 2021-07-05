@@ -129,13 +129,12 @@ get_individual_report().then(function (returnData) {
         "bins checked": returnData.bins_checked,
         "exploits": returnData.exploits,
         "entropy_value": returnData.entropy_value,
-        "1 entropy": "1",
-        "2 entropy": "1",
-        "3 entropy": "1",
-        "4 entropy": "1",
-        "5 entropy": "1",
         "path to logs": returnData.path_to_logs,
         "emba command": "./emba.sh -f /app/embark/uploadedFirmwareImages/active_2/170.pdf -l /app/emba/emba_logs/2  -g -s -z -W -F -t",
+    }
+
+    for (const [key, value] of Object.entries(returnData.strcpy_bin)) {
+            data_to_display[key] = value
     }
 
     const table = document.getElementById("detail_body");
