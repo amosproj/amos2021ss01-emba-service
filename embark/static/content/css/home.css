@@ -97,6 +97,11 @@
 	line-height: 50px;
 }
 
+.navigation ul li:active {
+	background: #4f418c;
+	border-radius: 12px;
+}
+
 .navigation ul li a {
 	display: flex;
 	text-decoration: none;
@@ -202,6 +207,7 @@
 	font-size: 20px;
 	border-radius: 12px;
 	text-align: center;
+	color: #EEEEEE;
 }
 
 .navigation.active .profile #log-out {
@@ -217,7 +223,7 @@
 	transition: all 0.5s ease;
 }
 
-.navigation.active ~ .main {
+.navigation.active~.main {
 	width: calc(100% - 300px);
 	left: 300px;
 }

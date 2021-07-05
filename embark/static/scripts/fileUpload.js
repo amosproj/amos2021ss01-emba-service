@@ -7,7 +7,7 @@ function dragOverHandler(ev) {
 function showFiles(fileData) {
   try {
     document.getElementById("uploadedFileNames").style.display = 'block';
-    document.querySelector(".fileText").innerHTML = fileData[0].name
+    document.querySelector(".fileName").innerHTML = fileData[0].name
 
   } catch (error) {
     alert(error.message);
@@ -15,6 +15,12 @@ function showFiles(fileData) {
 }
 
 function saveFiles() {
+  var progressBar = document.getElementById("progress-wrapper");
+        if (progressBar.style.display == "none") {
+            progressBar.style.display = "block";
+        } else {
+            progressBar.style.display = "none";
+        }
     var fileData = document.getElementById('file-input').files;
     var formData = new FormData()
     for (let index = 0; index < fileData.length; index++) {
