@@ -103,12 +103,6 @@ function get_individual_report() {
     let url = window.location.origin + "/get_individual_report/" + report_index;
 
     return $.getJSON(url).then(function(data){
-
-        data.cve_high = 10
-        data.PIE = 10
-
-        data.bins_checked = 20
-
         return data
     })
 }
