@@ -1,0 +1,27 @@
+{% extends "uploader/home.html" %}
+{% block maincontent %}
+
+<div class="dataCard">
+
+    <div class="row dataCardRow">
+        <div class="card dataCardRow-left-large">
+            <table class="table table-striped table-borderless" >
+                  <tbody id="detail_body"></tbody>
+            </table>
+        </div>
+
+        <div class="row dataCardColumn">
+            <div class="card card-right">
+                <canvas class="aggregatedReport" id="accumulatedCvePie" style="background-color: white;width:100%;height:100%"></canvas>
+
+            </div>
+            <div class="card card-right">
+                <canvas class="aggregatedReport" id="accumulatedDonut"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% load static %}
+<script type="text/javascript" src="{% static 'scripts/individualReportDashboard.js' %}"></script>
+{% endblock %} 

@@ -15,7 +15,6 @@
                 <th scope="col">Start Date</th>
                 <th scope="col">End Date</th>
                 <th scope="col">Actions</th>
-                <th scope="col"></th>
             </tr>
             </thead>
 
@@ -28,14 +27,17 @@
                     <td>{{ firmware.start_date }}</td>
                     <td>{{ firmware.end_date }}</td>
                     <td>
-                        <form action={% url 'embark-download' firmware.pk %} method='GET'>
-                            <button type="submit" class="btn" >Download Logs</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action={% url 'embark-download' firmware.pk %} method='GET'>
-                            <button type="submit" class="btn" >Run Emba</button>
-                        </form>
+                        <p>
+                            <form action={% url 'embark-download' firmware.pk %} method='GET'>
+                                <button type="submit" class="btn" >Download Logs</button>
+                            </form>
+                            <form action={% url 'embark-download' firmware.pk %} method='GET'>
+                                <button type="submit" class="btn" >Run Emba</button>
+                            </form>
+                            <form action={% url 'embark-IndividualReportDashboard' firmware.pk %} method='GET'>
+                                <button type="submit" class="btn" >Detail View</button>
+                            </form>
+                        </p>
                     </td>
                 </tr>
             {% endfor %}
@@ -51,5 +53,13 @@
         $(document).ready(function() {
             $('#report-table').DataTable();
         } );
+
+        // $('#report-table tbody').on('click', 'tr', function () {
+        //     let data = table.row( this ).data();
+        //
+        //     console.log(data);
+        //
+        // } );
+
     </script>
 {% endblock %}
