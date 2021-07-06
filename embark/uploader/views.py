@@ -28,6 +28,7 @@ from django.views.decorators.cache import cache_control
 
 logger = logging.getLogger('web')
 
+
 @csrf_exempt
 @require_http_methods(['GET'])
 @login_required(login_url='/' + settings.LOGIN_URL)
@@ -47,11 +48,13 @@ def home(request):
     html_body = get_template('uploader/mainDashboard.html')
     return HttpResponse(html_body.render({'username': request.user.username}))
 
+
 @csrf_exempt
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def logout_view(request):
     request.session.flush()
     logout(request)
+
 
 def download_zipped(request, analyze_id):
     """
@@ -149,6 +152,7 @@ def start_analysis(request, refreshed):
 def service_dashboard(request):
     html_body = get_template('uploader/embaServiceDashboard.html')
     return HttpResponse(html_body.render())
+
 
 @login_required(login_url='/' + settings.LOGIN_URL)
 def report_dashboard(request):
