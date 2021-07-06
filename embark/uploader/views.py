@@ -134,9 +134,6 @@ def start_analysis(request, refreshed):
             logger.error(form.errors)
             return HttpResponse("Invalid Form")
 
-    FirmwareForm.base_fields['firmware'] = forms.ModelChoiceField(queryset=FirmwareFile.objects)
-    DeleteFirmwareForm.base_fields['firmware'] = forms.ModelChoiceField(queryset=FirmwareFile.objects)
-
     analyze_form = FirmwareForm()
     delete_form = DeleteFirmwareForm()
 
