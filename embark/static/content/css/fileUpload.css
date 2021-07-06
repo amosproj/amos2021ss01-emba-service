@@ -143,30 +143,30 @@ input:checked+.slider:before {
 }
 
 
-.fileName{
+.fileName {
     display: block;
     align-items: center;
 }
 
-.deleteFirmware{
+.deleteFirmware {
     display: flex;
     align-items: baseline;
 }
 
-.deleteFirmware>select{
+.deleteFirmware>select {
     margin-left: 10px;
     width: 60%;
 }
 
-.form-group>.form-check-input{
+.form-group>.form-check-input {
     left: 22px;
 }
 
-.form-group>label{
+.form-group>label {
     padding-left: 30px;
 }
 
-.progress-wrapper{
-    display:none;
+.progress-wrapper {
+    display: none;
     margin-top: 10px;
 }
