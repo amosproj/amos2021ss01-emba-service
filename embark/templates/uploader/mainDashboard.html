@@ -33,16 +33,16 @@
             <canvas class="aggregatedReport" id="accumulatedCvePie"></canvas>
         </div>
         <div class="card card-right" id="entropy">
-        <div class="averageEntropy">
-            <label for="accumulatedEntropy">Average Entropy Value:</label>
+            <label for="accumulatedEntropy" id="entropyMeterLabel">Average Entropy Value:</label>
             <meter id="accumulatedEntropy"
                    min="0" max="8"
-                   value="0">
+                   value="0"
+                   high="6"
+                   low="3">
             </meter>
-        </div>
-        <div class="topEntropies" id="topEntropy">
-            <label>Top 5 Entropies</label>
-        </div>
+            <div class="topEntropyGraph">
+            <canvas class="aggregatedReport topEntropies" id="topEntropies"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -109,8 +109,8 @@
             <canvas class="aggregatedReport" id="accumulatedOs"></canvas>
         </div>
     </div>
-    <div class="row dataCardRow-bottom">
-        <div class="card card-bottom">
+    <div class="row cardRow dataCardRow5">
+        <div class="card card-wide">
             <canvas class="aggregatedReport" id="topBinaryTypes"></canvas>
         </div>
     </div>

@@ -14,24 +14,8 @@
     background-color: #fff;
     min-height: 100vh;
     overflow: hidden;
-    /* background-image: url('../images/Embark_red.png');
-    background-size: 50% 50%; */
 }
 
-/* .container-fluid::before {
-    content: '';
-    position: absolute;
-    height: 2000px;
-    width: 2000px;
-    top: -10%;
-    right: 48%;
-    /* background-image: linear-gradient(-45deg, #5a85eb 0%, #3860BE 100%); */
-/* transform: translateY(-50%);
-    background-size: 50% 50%;
-    background-image: url('#embarklogo');
-    opacity: 0.8;
-    border-radius: 25%;
-} */
 
 .forms-container {
     position: absolute;
@@ -131,7 +115,7 @@ form {
 img {
     height: 100%;
     width: 50%;
-    opacity: 0.8;
+    opacity: 0.7;
     position: relative;
 }
 

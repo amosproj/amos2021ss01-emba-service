@@ -16,9 +16,10 @@ var totalDirectories = document.getElementById('totalDirectories');
 var totalBinaries = document.getElementById('totalBinaries');
 var totalCve = document.getElementById('totalCve');
 var totalIssues = document.getElementById('totalIssues')
-// var topEntropies = document.getElementById('topEntropies');
+var topEntropies = document.getElementById('topEntropies').getContext('2d');
+var entropyMeterLabel = document.getElementById('entropyMeterLabel');
 
-var topBinaryTypes = document.getElementById('topBinaryTypes')
+var topBinaryTypes = document.getElementById('topBinaryTypes').getContext('2d');
 
 
 
@@ -37,6 +38,7 @@ function getRandomColors(num) {
 get_accumulated_reports().then(function (returnData) {
 
     accumulatedEntropy.setAttribute('value', returnData.entropy_value['mean']);
+    entropyMeterLabel.textContent = 'Average Entropy Value: ' + returnData.entropy_value['mean'].toFixed(2);
     firmwareAnalysed.textContent = returnData.total_firmwares;
     totalFiles.textContent = returnData.files['sum'];
     totalDirectories.textContent = returnData.directories['sum'];
@@ -327,6 +329,42 @@ get_accumulated_reports().then(function (returnData) {
                 title: {
                     display: true,
                     text: 'Top strcpy Binaries',
+                    fontSize: 20
+                },
+                tooltips: {
+                    enabled: true
+                }
+            }
+        },
+
+    });
+
+
+    var topEntropyLabels = [];
+    var topEntropyValues = [];
+
+    for (var i = 0; i < returnData.top_entropies.length; i++) {
+        topEntropyLabels.push(returnData.top_entropies[i]["name"]);
+        topEntropyValues.push(returnData.top_entropies[i]["entropy_value"]);
+    }
+
+    let topEntropyBar = new Chart(topEntropies, {
+        type: 'bar',
+        data: {
+            labels: topEntropyLabels,
+            datasets: [{
+                label: 'Firmwares with top entropies',
+                labels: topEntropyLabels,
+                data: topEntropyValues,
+                borderWidth: 1,
+                backgroundColor: getRandomColors(topEntropyLabels.length)
+            }],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: true,
+                    text: 'Firmwares with top entropies',
                     fontSize: 20
                 },
                 tooltips: {

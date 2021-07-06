@@ -33,6 +33,7 @@
 
 .card-wide {
     height: 400px;
+    max-height: 400px;
 }
 
 .card-left {
@@ -41,6 +42,8 @@
 
 .card-right {
     height: 600px;
+    grid-template-rows: 30% auto;
+    grid-gap: 10px;
 }
 
 .card-pie {
@@ -61,6 +64,10 @@ canvas {
     margin: 5px;
 }
 
+.topEntropyGraph {
+    margin-top: 30px;
+}
+
 meter {
     width: 100%
 }
@@ -74,7 +81,7 @@ meter {
 }
 
 .dataCardRow {
-    grid-template-columns: 80% auto;
+    grid-template-columns: 60% auto;
 }
 
 .dataCardRow2 {
@@ -83,4 +90,8 @@ meter {
 
 .dataCardRow4 {
     grid-template-columns: 50% auto;
+}
+
+.dataCardRow5 canvas {
+    max-height: 350px !important;
 }
