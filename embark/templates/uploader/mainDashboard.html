@@ -32,12 +32,17 @@
         <div class="card card-left">
             <canvas class="aggregatedReport" id="accumulatedCvePie"></canvas>
         </div>
-        <div class="card card-right">
+        <div class="card card-right" id="entropy">
+        <div class="averageEntropy">
             <label for="accumulatedEntropy">Average Entropy Value:</label>
             <meter id="accumulatedEntropy"
                    min="0" max="8"
                    value="0">
             </meter>
+        </div>
+        <div class="topEntropies" id="topEntropy">
+            <label>Top 5 Entropies</label>
+        </div>
         </div>
     </div>
 </div>

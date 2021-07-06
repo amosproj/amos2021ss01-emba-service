@@ -221,6 +221,7 @@
 	left: 80px;
 	width: calc(100% - 80px);
 	transition: all 0.5s ease;
+	padding: 15px;
 }
 
 .navigation.active~.main {

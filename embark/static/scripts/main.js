@@ -61,3 +61,18 @@ function confirmDelete(event) {
         successAlert(`firmware file deleted: ${event.target.elements.firmware.value}`);
     }
 }
+
+function logOut() {
+    $.ajax({
+        type: 'POST',
+        url: 'logout/',
+        processData: false,
+        contentType: false,
+        success: function (data) {
+
+            location.reload();
+            successAlert("Logged Out successfully");
+        }
+    });
+
+}

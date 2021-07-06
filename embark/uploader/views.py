@@ -52,7 +52,6 @@ def logout_view(request):
     request.session.flush()
     logout(request)
 
-
 def download_zipped(request, analyze_id):
     """
     download zipped log directory

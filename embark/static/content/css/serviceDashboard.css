@@ -9,7 +9,6 @@
 
 .containerCSS {
     width: 100%;
-    padding: 15px;
 }
 
 .title {
@@ -31,11 +30,6 @@ h3 {
 .containerCSS div {
     width: inherit;
 }
-
-.statusTile {
-    background-color: lavender;
-}
-
 
 .statusEMba {
     display: flex;
