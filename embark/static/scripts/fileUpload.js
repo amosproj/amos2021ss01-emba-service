@@ -10,7 +10,7 @@ function showFiles(fileData) {
     document.querySelector(".fileName").innerHTML = fileData[0].name
 
   } catch (error) {
-    alert(error.message);
+    errorAlert(error.message);
   }
 }
 
@@ -69,11 +69,11 @@ async function postFiles(formData) {
               postFiles(formData);
             }
           }else{
-            alert("The file is not saved");
+            errorAlert("The file is not saved");
             location.reload();
           }
         }else{
-        alert("" + data);
+        successAlert("" + data);
         location.reload()
         //document.getElementById("uploadedFileNames").style.display = 'none';
         location.reload();
@@ -81,7 +81,7 @@ async function postFiles(formData) {
       }
     });
   } catch (error) {
-    alert(error.message);
+    errorAlert(error.message);
   }
 }
 
@@ -90,8 +90,8 @@ function saveDataFields(e) {
   try {
     var docln = document.getElementById('firmwareDataForm').elements.length;
     console.log(docln)
-    alert("form data saved successfully");
+    successAlert("form data saved successfully");
   } catch (error) {
-    alert(error.message);
+    errorAlert(error.message);
   }
 }

@@ -1,4 +1,4 @@
-/ TODO frontend is currently doing nothing with the data from backend. Merge this Branch with Ravi's work
+// TODO frontend is currently doing nothing with the data from backend. Merge this Branch with Ravi's work
 // start socket connection just once
 var socket = new WebSocket(
     'ws://' +
@@ -20,7 +20,8 @@ socket.onmessage = function (event) {
     var data = JSON.parse(event.data);
     console.log(data);
     if (cur_len !== Object.keys(data).length) {
-        var htmlToAdd = '<div class="row"><div class="coldiv"><a class="tile row statusTile"><div class="progress" id="progress-wrapper"><div id="pBar_' + Object.keys(data)[cur_len] + '" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div><br><div class="row statusEMba"><div class="col-sm log tile moduleLog"><ul class="log_phase" id="log_phase_' + Object.keys(data)[cur_len] + '"> </ul></div><div class="col-sm log tile phaseLog"><ul class="log_phase" id="log_module_' + Object.keys(data)[cur_len] + '"> </ul></div></div><button type="submit" class="btn" id="' + Object.keys(data)[cur_len] + '" onclick="pythonAjax(this.id)" >Upload</button></a></div></div>'
+        /* var htmlToAdd = '<div class="row"><div class="coldiv"><a class="tile row statusTile"><div class="progress" id="progress-wrapper"><div id="pBar_' + Object.keys(data)[cur_len] + '" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div><br><div class="row statusEMba"><div class="col-sm log tile moduleLog"><ul class="log_phase" id="log_phase_' + Object.keys(data)[cur_len] + '"> </ul></div><div class="col-sm log tile phaseLog"><ul class="log_phase" id="log_module_' + Object.keys(data)[cur_len] + '"> </ul></div></div><button type="submit" class="btn" id="' + Object.keys(data)[cur_len] + '" onclick="pythonAjax(this.id)" >Upload</button></a></div></div>' */
+        var htmlToAdd = '<div class="row containerCSS"><div class="row"><div class="col-sm log tile moduleLog"><ul class="log_phase logUL" id="log_phase_' + Object.keys(data)[cur_len] + '"> </ul > </div><div class="col-sm log tile phaseLog"><ul class="log_phase logUL" id="log_module_' + Object.keys(data)[cur_len] + '"> </ul></div></div><div class="row"><div class="progress col-sm-11" id="progress-wrapper"><div id="pBar_' + Object.keys(data)[cur_len] + '" class="progress-bar" role="progressbar" aria-valuenow: "0" aria - valuemin: "0"aria - valuemax= "100" > 0 % </div></div><div class="col-sm"><button type="submit" class="btn" id="' + Object.keys(data)[cur_len] + '" onclick="cancelLog(this.id)" >Cancel</button></div></div></div>'
         document.getElementById("add_to_me").insertAdjacentHTML('afterend', htmlToAdd);
         console.log("log_phase_" + Object.keys(data)[cur_len])
         module_array.push("no module");
@@ -94,10 +95,10 @@ function livelog_module(module, cur_ID) {
  * 
  * @param {*} currentID Id of the contaniner which is passed backend to pull information
  */
-function pythonAjax(currentID) {
+function cancelLog(currentID) {
 
     try {
-        $.get("logs", {
+        $.get("../../logs", {
                 id: currentID
             })
             .done(function (data) {
