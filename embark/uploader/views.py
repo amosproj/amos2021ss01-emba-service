@@ -400,5 +400,4 @@ def get_accumulated_reports(request):
     strcpy_bins = dict(sorted(strcpy_bins.items(), key=itemgetter(1), reverse=True)[:10])
     data['top_strcpy_bins'] = strcpy_bins
 
-
     return JsonResponse(data=data, status=HTTPStatus.OK)

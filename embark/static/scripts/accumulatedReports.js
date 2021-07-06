@@ -12,6 +12,8 @@ var totalBinaries = document.getElementById('totalBinaries');
 var totalCve= document.getElementById('totalCve');
 var totalIssues = document.getElementById('totalIssues')
 
+var topBinaryTypes = document.getElementById('topBinaryTypes')
+
 
 
 function getRandomColors(num) {
@@ -200,6 +202,36 @@ get_accumulated_reports().then(function (returnData) {
                         title: {
                             display: true,
                             text: 'OS Distribution',
+                            fontSize: 20
+                        },
+                        tooltips: {
+                            enabled: true
+                        }
+                    }
+            },
+
+    });
+
+
+    var topBinaryLabels = Object.keys(returnData.top_strcpy_bins);
+    var topBinaryCounts = Object.values(returnData.top_strcpy_bins);
+    let osBarChart = new Chart(accumulatedOs, {
+        type: 'bar',
+        data: {
+                  labels: topBinaryLabels,
+                  datasets: [{
+                    label: 'Top strcpy Binaries',
+                    labels: topBinaryLabels,
+                    data: topBinaryCounts,
+                    borderWidth: 1,
+                    backgroundColor: getRandomColors(topBinaryLabels.length)
+                  }],
+                  options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        title: {
+                            display: true,
+                            text: 'Top strcpy Binaries',
                             fontSize: 20
                         },
                         tooltips: {
