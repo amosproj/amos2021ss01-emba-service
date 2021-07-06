@@ -278,8 +278,8 @@ get_accumulated_reports().then(function (returnData) {
         type: 'pie',
         data: {
             labels: [
-                'Binaries with STRIPPED',
-                'Binaries without STRIPPED',
+                'Binaries with Stripped',
+                'Binaries without Stripped',
             ],
             datasets: [{
                 labels: ['binaries with STRIPPED', 'binaries without STRIPPED'],

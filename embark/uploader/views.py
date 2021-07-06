@@ -44,9 +44,7 @@ def login(request):
 @login_required(login_url='/' + settings.LOGIN_URL)
 def home(request):
     html_body = get_template('uploader/mainDashboard.html')
-    form = FirmwareForm()
-    render(request, 'uploader/fileUpload.html', {'form': form})
-    return HttpResponse(html_body.render())
+    return HttpResponse(html_body.render({'username': request.user.username}))
 
 @csrf_exempt
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
