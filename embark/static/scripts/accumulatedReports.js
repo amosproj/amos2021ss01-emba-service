@@ -215,7 +215,7 @@ get_accumulated_reports().then(function (returnData) {
 
     var topBinaryLabels = Object.keys(returnData.top_strcpy_bins);
     var topBinaryCounts = Object.values(returnData.top_strcpy_bins);
-    let osBarChart = new Chart(accumulatedOs, {
+    let topBinaryBar = new Chart(topBinaryTypes, {
         type: 'bar',
         data: {
                   labels: topBinaryLabels,
