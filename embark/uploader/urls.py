@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.urls import path
+from django.urls import path, re_path
 
 from uploader import views
 
@@ -18,6 +18,8 @@ urlpatterns = [
     path('home/reportDashboard/', views.report_dashboard, name='embark-ReportDashboard'),
     path('home/individualReportDashboard/<int:analyze_id>', views.individual_report_dashboard, name='embark-IndividualReportDashboard'),
     path('download_zipped/<int:analyze_id>/', views.download_zipped, name='embark-download'),
+    path('emba_logs/<int:analyze_id>/html-report/<str:hmtl_file>', views.html_report, name='embark-html-report'),
+    path('emba_logs/<int:analyze_id>/html-report/style/<str:img_file>', views.html_report_resource, name='embark-html-report-resource'),
 
     path('get_load/', views.get_load, name='embark-get-load'),
     path('get_individual_report/<int:analyze_id>/', views.get_individual_report, name='embark-get-individual-report'),
