@@ -1,26 +1,30 @@
-// TODO frontend is currently doing nothing with the data from backend. Merge this Branch with Ravi's work
 
-// start socket connection just once
+/**
+ *  start socket connection just once
+ */
 var socket = new WebSocket(
         'ws://'
         + location.hostname + ':8001'
         + '/ws/progress/'
 );
-// for log implementation which is currently commented out
+/*for log implementation which is currently commented out*/
 var module_array = []
 var phase_array = []
-//var current_module = "no module"
-//var current_phase = "no phase"
 var cur_len = 0
 
-// called when a websocket connection is established
+/**
+ * called when a websocket connection is established
+ * */ 
 socket.onopen = function (e) {
     console.log("[open] Connection established");
 };
 
-// this method is called whenever a message from the backend arrives
+/** 
+ * This method is called whenever a message from the backend arrives
+ * */ 
 socket.onmessage = function (event) {
 
+    try{
     var data = JSON.parse(event.data);
     console.log(data);
 
@@ -48,21 +52,31 @@ socket.onmessage = function (event) {
         phase_array[idx] = data[id][length - 1].phase
         makeProgress(data[id][length - 1].percentage, id)
     }
+    }
+    catch(error){
+        errorAlert(error.message);
+    }
 }
 
-// this method is called when the websocket connection is closed
+/**
+ * This method is called when the websocket connection is closed
+ *  */ 
 socket.onclose = function (event) {
     console.log(event.reason)
     console.error('Chat socket closed unexpectedly');
 };
 
-// this method is called when a error occurs
+/**
+ * this method is called when a error occurs
+ *  */ 
 socket.onerror = function (err) {
     console.error('Socket encountered error: ', err.message, 'Closing socket');
     socket.close();
 };
 
-// TODO impement this method. -> send a refresh request once page is loaded
+/**
+ * Connection Established
+ */
 function embaProgress() {
     console.log("Messaging started")
     setInterval(function () {
@@ -71,8 +85,11 @@ function embaProgress() {
     // this method is called when the connection is established
 }
 
-// TODO make this work with Ravis changes
-// method for progressBar progress
+/**
+ * Update the Progress bar with the percentange of progress made in Analysing the Firmware
+ * @param {*} percent Percentage Completed
+ * @param {*} cur_ID Current Id of the Container
+ */
 function makeProgress(percent, cur_ID) {
     var p = percent * 100;
     var rounded = Math.round(p);
@@ -80,7 +97,11 @@ function makeProgress(percent, cur_ID) {
     $(id).attr('aria-valuenow', rounded).css('width', rounded + '%').text(rounded + '%')
 }
 
-//log the current phase live
+/**
+ * Bind the Phase Messages from log file to Container
+ * @param {*} phase Phase Message received from Log
+ * @param {*} cur_ID Current Id of the Container
+ */
 function livelog_phase(phase, cur_ID) {
     var id = "#log_phase_" + cur_ID;
     var $List = $(id);
@@ -88,7 +109,11 @@ function livelog_phase(phase, cur_ID) {
     $List.append($entry);
 }
 
-//log current phase live
+/**
+ * Bind the Module message from log file to container
+ * @param {*} module Module Log message received from Log
+ * @param {*} cur_ID Current Id of the container
+ */
 function livelog_module(module, cur_ID) {
     var id = "#log_module_" + cur_ID;
     var $List = $(id);
@@ -98,7 +123,7 @@ function livelog_module(module, cur_ID) {
 
 
 /**
- *
+ * Removes the container from the UI
  * @param {*} currentID Id of the contaniner which is passed backend to pull information
  */
 function cancelLog(currentID) {
@@ -107,9 +132,6 @@ function cancelLog(currentID) {
     try {
         var idOfDIV = "#Container_" + currentID;
         $(idOfDIV).remove();
-        //currentID.parentNode.parentNode.parentNode.parentNode.removeChild(currentID.parentNode.parentNode.parentNode);
-
-
     } catch (error) {
         errorAlert(error.message);
     }
