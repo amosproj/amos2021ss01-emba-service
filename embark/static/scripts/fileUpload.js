@@ -26,19 +26,19 @@ function showFiles(fileData) {
  * Checks for any Multiple uploads and the Passes to save 
  */
 function saveFiles() {
-  var progressBar = document.getElementById("progress-wrapper");
-  if (progressBar.style.display == "none") {
-    progressBar.style.display = "block";
-  } else {
-    progressBar.style.display = "none";
-  }
-  var fileData = document.getElementById('file-input').files;
-  var formData = new FormData()
-  for (let index = 0; index < fileData.length; index++) {
-    fileData[index].inputFileName = fileData[index].name;
-    formData.append('file', fileData[index]);
+    var progressBar = document.getElementById("progress-wrapper");
+    if (progressBar.style.display == "none") {
+      progressBar.style.display = "block";
+    } else {
+      progressBar.style.display = "none";
+    }
+    var fileData = document.getElementById('file-input').files;
+    var formData = new FormData()
+    for (let index = 0; index < fileData.length; index++) {
+      fileData[index].inputFileName = fileData[index].name;
+      formData.append('file', fileData[index]);
 
-  }
+    }
   postFiles(formData);
 }
 

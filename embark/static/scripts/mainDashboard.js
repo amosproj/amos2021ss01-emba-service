@@ -90,16 +90,21 @@ get_load().then(function (returndata) {
  * @returns Object of the Time,cpu and memory Percentage
  */
 function get_load() {
-    let url = window.location.origin + "/get_load/";
+    try {
+        let url = window.location.origin + "/get_load/";
 
-    return $.getJSON(url).then(function (data) {
+        return $.getJSON(url).then(function (data) {
 
-        return {
-            time: data.timestamp,
-            cpu: data.cpu_percentage,
-            mem: data.memory_percentage
-        }
-    })
+            return {
+                time: data.timestamp,
+                cpu: data.cpu_percentage,
+                mem: data.memory_percentage
+            }
+        })    
+    } catch (error) {
+        errorAlert(error.message);    
+    }
+    
 }
 
 /**
