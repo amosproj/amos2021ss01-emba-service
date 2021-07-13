@@ -74,15 +74,16 @@ socket.onerror = function (err) {
     socket.close();
 };
 
-/**
+/* /**
  * Connection Established
- */
+ 
 function embaProgress() {
     console.log("Messaging started")
     setInterval(function () {
         socket.send("Hello");
     }, 3000);
 }
+ */
 
 /**
  * Update the Progress bar with the percentange of progress made in Analysing the Firmware
